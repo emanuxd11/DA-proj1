@@ -1,0 +1,3 @@
+/home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug/CMakeFiles/Projeto1.dir
+/home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
