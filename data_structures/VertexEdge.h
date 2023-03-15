@@ -42,6 +42,7 @@ public:
     friend class MutablePriorityQueue<Vertex>;
 protected:
     int id;                // identifier
+
     std::vector<Edge *> adj;  // outgoing edges
 
     // auxiliary fields
@@ -72,9 +73,11 @@ public:
     void setSelected(bool selected);
     void setReverse(Edge *reverse);
     void setFlow(double flow);
+    void setService(string service);
 protected:
     Vertex * dest; // destination vertex
     double weight; // edge weight, can also be used for capacity
+    string service; // ?
 
     // auxiliary fields
     bool selected = false;

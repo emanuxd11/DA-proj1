@@ -149,3 +149,8 @@ void Edge::setReverse(Edge *reverse) {
 void Edge::setFlow(double flow) {
     this->flow = flow;
 }
+
+// ?
+void Edge::setService(string service) {
+    this->service = service;
+}
