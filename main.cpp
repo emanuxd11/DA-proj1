@@ -1,6 +1,9 @@
 #include <iostream>
+#include "data_structures/Station.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Station station;
+    station.setName("abc");
+    std::cout << station.getName() << std::endl;
     return 0;
 }

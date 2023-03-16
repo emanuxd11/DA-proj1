@@ -5,27 +5,27 @@
 #ifndef PROJETO1_STATION_H
 #define PROJETO1_STATION_H
 
+#include <string>
 
 class Station {
 public:
-    // adicionar métodos aqui
-    void setName(string name);
-    void setDistrict(string district);
-    void setMunicipality(string municipality);
-    void setTownship(string township);
-    void setLine(string line);
+    void setName(std::string name);
+    void setDistrict(std::string district);
+    void setMunicipality(std::string municipality);
+    void setTownship(std::string township);
+    void setLine(std::string line);
 
-    string getName();
-    string getDistrict();
-    string getMunicipality();
-    string getTownship();
-    string getLine();
+    std::string getName();
+    std::string getDistrict();
+    std::string getMunicipality();
+    std::string getTownship();
+    std::string getLine();
 private:
-    string name;
-    string district;
-    string municipality;
-    string township;
-    string line;
+    std::string name;
+    std::string district;
+    std::string municipality;
+    std::string township;
+    std::string line;
 };
 
 

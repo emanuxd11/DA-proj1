@@ -9,15 +9,15 @@
 #include <fstream>
 #include <sstream>
 #include "Station.h"
-#include <Graph.h>
+#include "Graph.h"
 
 class Database {
 public:
-    unordered_map<int, Station> loadStations();
-    Graph loadGraph();
-
+    std::unordered_map<int, Station> loadStations();
+    Graph loadGraph(Graph &g, std::unordered_map<int, Station> stationHash);
+    std::unordered_map<std::string, int> stationsInverse(std::unordered_map<int, Station> stationHash);
 private:
-
+    //
 };
 
 

@@ -4,43 +4,43 @@
 
 #include "Station.h"
 
-void Station::setName(string name) {
+void Station::setName(std::string name) {
     this->name = name;
 }
 
-void Station::setDistrict(string district) {
+void Station::setDistrict(std::string district) {
     this->district = district;
 }
 
-void Station::setTownship(string township) {
+void Station::setTownship(std::string township) {
     this->township = township;
 }
 
-void Station::setMunicipality(string municipality) {
+void Station::setMunicipality(std::string municipality) {
     this->municipality = municipality;
 }
 
-void Station::setLine(string line) {
+void Station::setLine(std::string line) {
     this->line = line;
 }
 
 
-string Station::getName() {
+std::string Station::getName() {
     return this->name;
 }
 
-string Station::getDistrict() {
+std::string Station::getDistrict() {
     return this->district;
 }
 
-string Station::getMunicipality() {
+std::string Station::getMunicipality() {
     return this->municipality;
 }
 
-string Station::getTownship() {
+std::string Station::getTownship() {
     return this->township;
 }
 
-string Station::getLine() {
+std::string Station::getLine() {
     return this->line;
 }
