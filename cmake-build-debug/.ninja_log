@@ -1,8 +1,0 @@
-# ninja log v5
-1	154	1679015823804160579	CMakeFiles/DA_proj1.dir/data_structures/Station.cpp.o	41d9c6536e7e8ea3
-1	367	1679015824017493910	CMakeFiles/DA_proj1.dir/data_structures/Graph.cpp.o	eb57fd93a6e52b34
-411	451	1679015824100827245	DA_proj1	5995fde7db82875f
-2	411	1679015824060827244	CMakeFiles/DA_proj1.dir/data_structures/VertexEdge.cpp.o	3bbcb80e9320e59f
-1	124	1679015823774160580	CMakeFiles/DA_proj1.dir/data_structures/UFDS.cpp.o	dc0ec335b432aa6c
-1	213	1679015823864160579	CMakeFiles/DA_proj1.dir/data_structures/Heap.cpp.o	6fe7762b16c49b3
-1	235	1679015823887493913	CMakeFiles/DA_proj1.dir/main.cpp.o	d96a01ce6ae3fbd
