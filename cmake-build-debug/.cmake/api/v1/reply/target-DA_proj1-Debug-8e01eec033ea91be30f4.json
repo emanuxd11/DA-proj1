@@ -36,6 +36,9 @@
 			[
 				{
 					"fragment" : "-g -fdiagnostics-color=always"
+				},
+				{
+					"fragment" : "-std=gnu++17"
 				}
 			],
 			"language" : "CXX",
