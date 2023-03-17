@@ -10,16 +10,25 @@
 class Station {
 public:
     void setName(std::string name);
+
     void setDistrict(std::string district);
+
     void setMunicipality(std::string municipality);
+
     void setTownship(std::string township);
+
     void setLine(std::string line);
 
     std::string getName();
+
     std::string getDistrict();
+
     std::string getMunicipality();
+
     std::string getTownship();
+
     std::string getLine();
+
 private:
     std::string name;
     std::string district;

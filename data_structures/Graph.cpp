@@ -13,8 +13,8 @@ std::vector<Vertex *> Graph::getVertexSet() const {
 /*
  * Auxiliary function to find a vertex with a given content.
  */
-Vertex * Graph::findVertex(const int &id) const {
-    for (auto v : vertexSet)
+Vertex *Graph::findVertex(const int &id) const {
+    for (auto v: vertexSet)
         if (v->getId() == id)
             return v;
     return nullptr;
@@ -29,6 +29,7 @@ int Graph::findVertexIdx(const int &id) const {
             return i;
     return -1;
 }
+
 /*
  *  Adds a vertex with a given content or info (in) to a graph (this).
  *  Returns true if successful, and false if a vertex with that content already exists.
@@ -70,8 +71,8 @@ void deleteMatrix(int **m, int n) {
     if (m != nullptr) {
         for (int i = 0; i < n; i++)
             if (m[i] != nullptr)
-                delete [] m[i];
-        delete [] m;
+                delete[] m[i];
+        delete[] m;
     }
 }
 
@@ -79,8 +80,8 @@ void deleteMatrix(double **m, int n) {
     if (m != nullptr) {
         for (int i = 0; i < n; i++)
             if (m[i] != nullptr)
-                delete [] m[i];
-        delete [] m;
+                delete[] m[i];
+        delete[] m;
     }
 }
 

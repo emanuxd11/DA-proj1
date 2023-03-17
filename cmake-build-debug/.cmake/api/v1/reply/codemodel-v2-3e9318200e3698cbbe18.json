@@ -9,7 +9,7 @@
 					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
-						"string" : "3.17"
+						"string" : "3.24"
 					},
 					"projectIndex" : 0,
 					"source" : ".",
@@ -27,7 +27,7 @@
 					[
 						0
 					],
-					"name" : "Projeto1",
+					"name" : "DA_proj1",
 					"targetIndexes" : 
 					[
 						0
@@ -38,9 +38,9 @@
 			[
 				{
 					"directoryIndex" : 0,
-					"id" : "Projeto1::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Projeto1-Debug-9d8d652e9685b2c16749.json",
-					"name" : "Projeto1",
+					"id" : "DA_proj1::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-DA_proj1-Debug-fee1da8486d2e2f05570.json",
+					"name" : "DA_proj1",
 					"projectIndex" : 0
 				}
 			]
@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug",
-		"source" : "/home/manu/Programs/UNI/DA-feup/Projeto1"
+		"build" : "/home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug",
+		"source" : "/home/manu/Programs/UNI/DA-feup/DA-proj1"
 	},
 	"version" : 
 	{

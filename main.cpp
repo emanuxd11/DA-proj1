@@ -2,8 +2,8 @@
 #include "data_structures/Station.h"
 
 int main() {
-    Station station;
-    station.setName("abc");
-    std::cout << station.getName() << std::endl;
+    Station stat;
+    stat.setName("hello does this work!!??");
+    std::cout << stat.getName() << std::endl;
     return 0;
 }

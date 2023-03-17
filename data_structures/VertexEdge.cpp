@@ -4,13 +4,13 @@
 
 /************************* Vertex  **************************/
 
-Vertex::Vertex(int id): id(id) {}
+Vertex::Vertex(int id) : id(id) {}
 
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
-Edge * Vertex::addEdge(Vertex *d, double w) {
+Edge *Vertex::addEdge(Vertex *d, double w) {
     auto newEdge = new Edge(this, d, w);
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
@@ -35,22 +35,20 @@ bool Vertex::removeEdge(int destID) {
             while (it2 != dest->incoming.end()) {
                 if ((*it2)->getOrig()->getId() == id) {
                     it2 = dest->incoming.erase(it2);
-                }
-                else {
+                } else {
                     it2++;
                 }
             }
             delete edge;
             removedEdge = true; // allows for multiple edges to connect the same pair of vertices (multigraph)
-        }
-        else {
+        } else {
             it++;
         }
     }
     return removedEdge;
 }
 
-bool Vertex::operator<(Vertex & vertex) const {
+bool Vertex::operator<(Vertex &vertex) const {
     return this->dist < vertex.dist;
 }
 
@@ -58,7 +56,7 @@ int Vertex::getId() const {
     return this->id;
 }
 
-std::vector<Edge*> Vertex::getAdj() const {
+std::vector<Edge *> Vertex::getAdj() const {
     return this->adj;
 }
 
@@ -112,9 +110,9 @@ void Vertex::setPath(Edge *path) {
 
 /********************** Edge  ****************************/
 
-Edge::Edge(Vertex *orig, Vertex *dest, double w): orig(orig), dest(dest), weight(w) {}
+Edge::Edge(Vertex *orig, Vertex *dest, double w) : orig(orig), dest(dest), weight(w) {}
 
-Vertex * Edge::getDest() const {
+Vertex *Edge::getDest() const {
     return this->dest;
 }
 
@@ -122,7 +120,7 @@ double Edge::getWeight() const {
     return this->weight;
 }
 
-Vertex * Edge::getOrig() const {
+Vertex *Edge::getOrig() const {
     return this->orig;
 }
 
@@ -151,6 +149,6 @@ void Edge::setFlow(double flow) {
 }
 
 // ?
-void Edge::setService(string service) {
+void Edge::setService(std::string service) {
     this->service = service;
 }

@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug"
+			"value" : "/home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -115,7 +115,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/bin/cmake"
+			"value" : "/home/manu/.apps/clion/bin/cmake/linux/x64/bin/cmake"
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
@@ -127,7 +127,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/bin/cpack"
+			"value" : "/home/manu/.apps/clion/bin/cmake/linux/x64/bin/cpack"
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
@@ -139,7 +139,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/bin/ctest"
+			"value" : "/home/manu/.apps/clion/bin/cmake/linux/x64/bin/ctest"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER",
@@ -543,7 +543,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "/home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -603,7 +603,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/manu/Programs/UNI/DA-feup/Projeto1"
+			"value" : "/home/manu/Programs/UNI/DA-feup/DA-proj1"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -655,7 +655,7 @@
 				}
 			],
 			"type" : "UNINITIALIZED",
-			"value" : "/home/manu/.apps/clion-2022.3.2/bin/ninja/linux/x64/ninja"
+			"value" : "/home/manu/.apps/clion/bin/ninja/linux/x64/ninja"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
@@ -843,7 +843,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "Projeto1"
+			"value" : "DA_proj1"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -887,7 +887,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24"
+			"value" : "/home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1126,7 +1126,7 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "Projeto1_BINARY_DIR",
+			"name" : "DA_proj1_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1135,10 +1135,10 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug"
+			"value" : "/home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug"
 		},
 		{
-			"name" : "Projeto1_IS_TOP_LEVEL",
+			"name" : "DA_proj1_IS_TOP_LEVEL",
 			"properties" : 
 			[
 				{
@@ -1150,7 +1150,7 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "Projeto1_SOURCE_DIR",
+			"name" : "DA_proj1_SOURCE_DIR",
 			"properties" : 
 			[
 				{
@@ -1159,7 +1159,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/manu/Programs/UNI/DA-feup/Projeto1"
+			"value" : "/home/manu/Programs/UNI/DA-feup/DA-proj1"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

@@ -15,10 +15,12 @@
 class Graph {
 public:
     ~Graph();
+
     /*
     * Auxiliary function to find a vertex with a given ID.
     */
     Vertex *findVertex(const int &id) const;
+
     /*
      *  Adds a vertex with a given content or info (in) to a graph (this).
      *  Returns true if successful, and false if a vertex with that content already exists.
@@ -30,15 +32,18 @@ public:
      * destination vertices and the edge weight (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(const int &sourc, const int &dest, double w, );
+    bool addEdge(const int &sourc, const int &dest, double w);
+
     bool addBidirectionalEdge(const int &sourc, const int &dest, double w);
 
     int getNumVertex() const;
+
     std::vector<Vertex *> getVertexSet() const;
+
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
 
-    double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
+    double **distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
 
     /*
@@ -48,6 +53,7 @@ protected:
 };
 
 void deleteMatrix(int **m, int n);
+
 void deleteMatrix(double **m, int n);
 
 #endif /* DA_TP_CLASSES_GRAPH */

@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: Projeto1
+# Project: DA_proj1
 # Configurations: Debug
 # =============================================================================
 
@@ -39,56 +39,80 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug/
+cmake_ninja_workdir = /home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target Projeto1
+# Object build statements for EXECUTABLE target DA_proj1
 
 
 #############################################
-# Order-only phony target for Projeto1
+# Order-only phony target for DA_proj1
 
-build cmake_object_order_depends_target_Projeto1: phony || CMakeFiles/Projeto1.dir
+build cmake_object_order_depends_target_DA_proj1: phony || CMakeFiles/DA_proj1.dir
 
-build CMakeFiles/Projeto1.dir/main.cpp.o: CXX_COMPILER__Projeto1_Debug /home/manu/Programs/UNI/DA-feup/Projeto1/main.cpp || cmake_object_order_depends_target_Projeto1
-  DEP_FILE = CMakeFiles/Projeto1.dir/main.cpp.o.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++17
-  OBJECT_DIR = CMakeFiles/Projeto1.dir
-  OBJECT_FILE_DIR = CMakeFiles/Projeto1.dir
+build CMakeFiles/DA_proj1.dir/main.cpp.o: CXX_COMPILER__DA_proj1_Debug /home/manu/Programs/UNI/DA-feup/DA-proj1/main.cpp || cmake_object_order_depends_target_DA_proj1
+  DEP_FILE = CMakeFiles/DA_proj1.dir/main.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/DA_proj1.dir
+  OBJECT_FILE_DIR = CMakeFiles/DA_proj1.dir
 
-build CMakeFiles/Projeto1.dir/data_structures/Station.cpp.o: CXX_COMPILER__Projeto1_Debug /home/manu/Programs/UNI/DA-feup/Projeto1/data_structures/Station.cpp || cmake_object_order_depends_target_Projeto1
-  DEP_FILE = CMakeFiles/Projeto1.dir/data_structures/Station.cpp.o.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++17
-  OBJECT_DIR = CMakeFiles/Projeto1.dir
-  OBJECT_FILE_DIR = CMakeFiles/Projeto1.dir/data_structures
+build CMakeFiles/DA_proj1.dir/data_structures/Graph.cpp.o: CXX_COMPILER__DA_proj1_Debug /home/manu/Programs/UNI/DA-feup/DA-proj1/data_structures/Graph.cpp || cmake_object_order_depends_target_DA_proj1
+  DEP_FILE = CMakeFiles/DA_proj1.dir/data_structures/Graph.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/DA_proj1.dir
+  OBJECT_FILE_DIR = CMakeFiles/DA_proj1.dir/data_structures
 
-build CMakeFiles/Projeto1.dir/data_structures/Database.cpp.o: CXX_COMPILER__Projeto1_Debug /home/manu/Programs/UNI/DA-feup/Projeto1/data_structures/Database.cpp || cmake_object_order_depends_target_Projeto1
-  DEP_FILE = CMakeFiles/Projeto1.dir/data_structures/Database.cpp.o.d
-  FLAGS = -g -fdiagnostics-color=always -std=gnu++17
-  OBJECT_DIR = CMakeFiles/Projeto1.dir
-  OBJECT_FILE_DIR = CMakeFiles/Projeto1.dir/data_structures
+build CMakeFiles/DA_proj1.dir/data_structures/Heap.cpp.o: CXX_COMPILER__DA_proj1_Debug /home/manu/Programs/UNI/DA-feup/DA-proj1/data_structures/Heap.cpp || cmake_object_order_depends_target_DA_proj1
+  DEP_FILE = CMakeFiles/DA_proj1.dir/data_structures/Heap.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/DA_proj1.dir
+  OBJECT_FILE_DIR = CMakeFiles/DA_proj1.dir/data_structures
+
+build CMakeFiles/DA_proj1.dir/data_structures/Station.cpp.o: CXX_COMPILER__DA_proj1_Debug /home/manu/Programs/UNI/DA-feup/DA-proj1/data_structures/Station.cpp || cmake_object_order_depends_target_DA_proj1
+  DEP_FILE = CMakeFiles/DA_proj1.dir/data_structures/Station.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/DA_proj1.dir
+  OBJECT_FILE_DIR = CMakeFiles/DA_proj1.dir/data_structures
+
+build CMakeFiles/DA_proj1.dir/data_structures/UFDS.cpp.o: CXX_COMPILER__DA_proj1_Debug /home/manu/Programs/UNI/DA-feup/DA-proj1/data_structures/UFDS.cpp || cmake_object_order_depends_target_DA_proj1
+  DEP_FILE = CMakeFiles/DA_proj1.dir/data_structures/UFDS.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/DA_proj1.dir
+  OBJECT_FILE_DIR = CMakeFiles/DA_proj1.dir/data_structures
+
+build CMakeFiles/DA_proj1.dir/data_structures/VertexEdge.cpp.o: CXX_COMPILER__DA_proj1_Debug /home/manu/Programs/UNI/DA-feup/DA-proj1/data_structures/VertexEdge.cpp || cmake_object_order_depends_target_DA_proj1
+  DEP_FILE = CMakeFiles/DA_proj1.dir/data_structures/VertexEdge.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/DA_proj1.dir
+  OBJECT_FILE_DIR = CMakeFiles/DA_proj1.dir/data_structures
+
+build CMakeFiles/DA_proj1.dir/data_structures/Database.cpp.o: CXX_COMPILER__DA_proj1_Debug /home/manu/Programs/UNI/DA-feup/DA-proj1/data_structures/Database.cpp || cmake_object_order_depends_target_DA_proj1
+  DEP_FILE = CMakeFiles/DA_proj1.dir/data_structures/Database.cpp.o.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles/DA_proj1.dir
+  OBJECT_FILE_DIR = CMakeFiles/DA_proj1.dir/data_structures
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target Projeto1
+# Link build statements for EXECUTABLE target DA_proj1
 
 
 #############################################
-# Link the executable Projeto1
+# Link the executable DA_proj1
 
-build Projeto1: CXX_EXECUTABLE_LINKER__Projeto1_Debug CMakeFiles/Projeto1.dir/main.cpp.o CMakeFiles/Projeto1.dir/data_structures/Station.cpp.o CMakeFiles/Projeto1.dir/data_structures/Database.cpp.o
+build DA_proj1: CXX_EXECUTABLE_LINKER__DA_proj1_Debug CMakeFiles/DA_proj1.dir/main.cpp.o CMakeFiles/DA_proj1.dir/data_structures/Graph.cpp.o CMakeFiles/DA_proj1.dir/data_structures/Heap.cpp.o CMakeFiles/DA_proj1.dir/data_structures/Station.cpp.o CMakeFiles/DA_proj1.dir/data_structures/UFDS.cpp.o CMakeFiles/DA_proj1.dir/data_structures/VertexEdge.cpp.o CMakeFiles/DA_proj1.dir/data_structures/Database.cpp.o
   FLAGS = -g
-  OBJECT_DIR = CMakeFiles/Projeto1.dir
+  OBJECT_DIR = CMakeFiles/DA_proj1.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = Projeto1
-  TARGET_PDB = Projeto1.dbg
+  TARGET_FILE = DA_proj1
+  TARGET_PDB = DA_proj1.dbg
 
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug && /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug && /home/manu/.apps/clion/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -99,7 +123,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug && /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/manu/Programs/UNI/DA-feup/Projeto1 -B/home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug
+  COMMAND = cd /home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug && /home/manu/.apps/clion/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S/home/manu/Programs/UNI/DA-feup/DA-proj1 -B/home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -115,9 +139,9 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: /home/manu/Programs/UNI/DA-feup/Projeto1/cmake-build-debug
+# Folder: /home/manu/Programs/UNI/DA-feup/DA-proj1/cmake-build-debug
 
-build all: phony Projeto1
+build all: phony DA_proj1
 
 # =============================================================================
 # Built-in targets
@@ -126,14 +150,14 @@ build all: phony Projeto1
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCInformation.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU-C.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU-CXX.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU-C.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU-CXX.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /home/manu/Programs/UNI/DA-feup/Projeto1/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCInformation.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU-C.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU-CXX.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU-C.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU-CXX.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /home/manu/Programs/UNI/DA-feup/DA-proj1/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCInformation.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU-C.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU-CXX.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU-C.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU-CXX.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux.cmake /home/manu/.apps/clion-2022.3.2/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /home/manu/Programs/UNI/DA-feup/Projeto1/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake: phony
+build /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCInformation.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCXXInformation.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeCommonLanguageInclude.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeGenericSystem.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeInitializeConfigs.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeLanguageInformation.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInformation.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/CMakeSystemSpecificInitialize.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/CMakeCommonCompilerMacros.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU-C.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU-CXX.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Compiler/GNU.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU-C.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU-CXX.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux-GNU.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/Linux.cmake /home/manu/.apps/clion/bin/cmake/linux/x64/share/cmake-3.24/Modules/Platform/UnixPaths.cmake /home/manu/Programs/UNI/DA-feup/DA-proj1/CMakeLists.txt CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake: phony
 
 
 #############################################
