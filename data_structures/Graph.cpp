@@ -13,9 +13,9 @@ std::vector<Vertex *> Graph::getVertexSet() const {
 /*
  * Auxiliary function to find a vertex with a given content.
  */
-Vertex *Graph::findVertex(const int &id) const {
+Vertex *Graph::findVertex(std::string name) {
     for (auto v: vertexSet)
-        if (v->getId() == id)
+        if (v->getStation().getName() == name)
             return v;
     return nullptr;
 }
@@ -34,10 +34,11 @@ int Graph::findVertexIdx(const int &id) const {
  *  Adds a vertex with a given content or info (in) to a graph (this).
  *  Returns true if successful, and false if a vertex with that content already exists.
  */
-bool Graph::addVertex(const int &id) {
-    if (findVertex(id) != nullptr)
+bool Graph::addVertex(const int &id, Station station) {
+    if (findVertex(station.getName()) != nullptr) {
         return false;
-    vertexSet.push_back(new Vertex(id));
+    }
+    vertexSet.push_back(new Vertex(id, station));
     return true;
 }
 
@@ -46,18 +47,18 @@ bool Graph::addVertex(const int &id) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(const int &sourc, const int &dest, double w) {
-    auto v1 = findVertex(sourc);
-    auto v2 = findVertex(dest);
+bool Graph::addEdge(Station sourc, Station dest, double w) {
+    auto v1 = findVertex(sourc.getName());
+    auto v2 = findVertex(dest.getName());
     if (v1 == nullptr || v2 == nullptr)
         return false;
     v1->addEdge(v2, w);
     return true;
 }
 
-bool Graph::addBidirectionalEdge(const int &sourc, const int &dest, double w) {
-    auto v1 = findVertex(sourc);
-    auto v2 = findVertex(dest);
+bool Graph::addBidirectionalEdge(Station sourc, Station dest, double w) {
+    auto v1 = findVertex(sourc.getName());
+    auto v2 = findVertex(dest.getName());
     if (v1 == nullptr || v2 == nullptr)
         return false;
     auto e1 = v1->addEdge(v2, w);

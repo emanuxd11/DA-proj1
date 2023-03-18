@@ -39,8 +39,8 @@ std::unordered_map<int, Station> Database::loadStations() {
 std::unordered_map<std::string, int> Database::stationsInverse(std::unordered_map<int, Station> stationHash) {
     std::unordered_map<std::string, int> inverse;
 
-    for (auto it = stationHash.begin(); it != stationHash.end(); it++) {
-        inverse[it->second.getName()] = it->first;
+    for (auto &it : stationHash) {
+        inverse[it.second.getName()] = it.first;
     }
     return inverse;
 }
@@ -50,11 +50,9 @@ Graph Database::loadGraph(std::unordered_map<int, Station> stationHash) {
     std::ifstream network("../network.csv");
 
     if (network.is_open()) {
-        // Edge *edge;
         std::unordered_map<std::string, int> inverseStations = stationsInverse(stationHash);
 
         std::string line, origStation, destStation, capacity, throwaway;
-        int origId, destId;
 
         getline(network, throwaway);
         while (getline(network, line)) {
@@ -64,10 +62,14 @@ Graph Database::loadGraph(std::unordered_map<int, Station> stationHash) {
             getline(sep, capacity, ',');
             getline(sep, line, '\n');
 
-            origId = inverseStations[origStation];
-            destId = inverseStations[destStation];
+            int origId = inverseStations[origStation];
+            int destId = inverseStations[destStation];
+            Station orig = stationHash[origId];
+            Station dest = stationHash[destId];
 
-            g.addEdge(origId, destId, std::stod(capacity));
+            g.addVertex(origId, orig);
+            g.addVertex(destId, dest);
+            g.addEdge(orig, dest, std::stod(capacity));
         }
     }
 

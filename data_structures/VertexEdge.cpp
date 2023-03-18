@@ -4,7 +4,7 @@
 
 /************************* Vertex  **************************/
 
-Vertex::Vertex(int id) : id(id) {}
+Vertex::Vertex(int id, Station station) : id(id), station(station) {}
 
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
@@ -82,6 +82,10 @@ Edge *Vertex::getPath() const {
 
 std::vector<Edge *> Vertex::getIncoming() const {
     return this->incoming;
+}
+
+Station Vertex::getStation() const {
+    return this->station;
 }
 
 void Vertex::setId(int id) {

@@ -9,6 +9,7 @@
 #include <limits>
 #include <algorithm>
 #include "../data_structures/MutablePriorityQueue.h"
+#include "../data_structures/Station.h"
 
 class Edge;
 
@@ -18,7 +19,7 @@ class Edge;
 
 class Vertex {
 public:
-    Vertex(int id);
+    Vertex(int id, Station station);
 
     bool operator<(Vertex &vertex) const; // // required by MutablePriorityQueue
 
@@ -37,6 +38,8 @@ public:
     Edge *getPath() const;
 
     std::vector<Edge *> getIncoming() const;
+
+    Station getStation() const;
 
     void setId(int info);
 
@@ -58,6 +61,7 @@ public:
 
 protected:
     int id;                // identifier
+    Station station;
 
     std::vector<Edge *> adj;  // outgoing edges
 

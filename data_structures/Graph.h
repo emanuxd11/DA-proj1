@@ -19,22 +19,22 @@ public:
     /*
     * Auxiliary function to find a vertex with a given ID.
     */
-    Vertex *findVertex(const int &id) const;
+    Vertex *findVertex(std::string name);
 
     /*
      *  Adds a vertex with a given content or info (in) to a graph (this).
      *  Returns true if successful, and false if a vertex with that content already exists.
      */
-    bool addVertex(const int &id);
+    bool addVertex(const int &id, Station station);
 
     /*
      * Adds an edge to a graph (this), given the contents of the source and
      * destination vertices and the edge weight (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(const int &sourc, const int &dest, double w);
+    bool addEdge(Station sourc, Station dest, double w);
 
-    bool addBidirectionalEdge(const int &sourc, const int &dest, double w);
+    bool addBidirectionalEdge(Station sourc, Station dest, double w);
 
     int getNumVertex() const;
 
