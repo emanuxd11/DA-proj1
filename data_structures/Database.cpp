@@ -7,7 +7,7 @@
 std::unordered_map<int, Station> Database::loadStations() {
     std::unordered_map<int, Station> stationHash;
 
-    std::ifstream stations("stations.csv");
+    std::ifstream stations("../stations.csv");
 
     if (stations.is_open()) {
         int count = 0;
@@ -45,9 +45,9 @@ std::unordered_map<std::string, int> Database::stationsInverse(std::unordered_ma
     return inverse;
 }
 
-Graph Database::loadGraph(Graph &g, std::unordered_map<int, Station> stationHash) {
-
-    std::ifstream network("network.csv");
+Graph Database::loadGraph(std::unordered_map<int, Station> stationHash) {
+    Graph g;
+    std::ifstream network("../network.csv");
 
     if (network.is_open()) {
         // Edge *edge;
@@ -70,4 +70,6 @@ Graph Database::loadGraph(Graph &g, std::unordered_map<int, Station> stationHash
             g.addEdge(origId, destId, std::stod(capacity));
         }
     }
+
+    return g;
 }
