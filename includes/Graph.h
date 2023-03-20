@@ -32,9 +32,9 @@ public:
      * destination vertices and the edge weight (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(const int &sourc, const int &dest, double w);
+    bool addEdge(const int &sourc, const int &dest, double w, int c);
 
-    bool addBidirectionalEdge(const int &sourc, const int &dest, double w);
+    bool addBidirectionalEdge(const int &sourc, const int &dest, double w, int c);
 
     int getNumVertex() const;
 

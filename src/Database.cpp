@@ -31,7 +31,7 @@ std::unordered_map<int, Station> Database::loadStations() {
             stationHash[count] = station;
             count++;
         }
-    }
+    }  else throw ("flights.csv file not found in dataset folder!");
 
     return stationHash;
 }
@@ -45,8 +45,7 @@ std::unordered_map<std::string, int> Database::stationsInverse(std::unordered_ma
     return inverse;
 }
 
-Graph Database::loadGraph(std::unordered_map<int, Station> stationHash) {
-    Graph g;
+Graph Database::loadGraph(Graph& g, std::unordered_map<int, Station>& stationHash) {
     std::ifstream network("../network.csv");
 
     if (network.is_open()) {
@@ -54,7 +53,7 @@ Graph Database::loadGraph(std::unordered_map<int, Station> stationHash) {
         std::unordered_map<std::string, int> inverseStations = stationsInverse(stationHash);
 
         std::string line, origStation, destStation, capacity, throwaway;
-        int origId, destId;
+        int origId, destId, custo;
 
         getline(network, throwaway);
         while (getline(network, line)) {
@@ -64,12 +63,21 @@ Graph Database::loadGraph(std::unordered_map<int, Station> stationHash) {
             getline(sep, capacity, ',');
             getline(sep, line, '\n');
 
+            if(line == "STANDARD"){
+                custo = 2;
+            } else if(line == "ALFA PENDULAR"){
+                custo = 4;
+            }
+
             origId = inverseStations[origStation];
             destId = inverseStations[destStation];
 
-            g.addEdge(origId, destId, std::stod(capacity));
+            g.addVertex(origId);
+            g.addVertex(destId);
+
+            g.addEdge(origId, destId, std::stod(capacity), custo);
         }
-    }
+    } else throw ("flights.csv file not found in dataset folder!");
 
     return g;
 }
