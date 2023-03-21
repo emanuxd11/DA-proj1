@@ -2,7 +2,7 @@
 // Created by manu on 3/15/23.
 //
 
-#include "Station.h"
+#include "../includes/Station.h"
 
 void Station::setName(std::string name) {
     this->name = name;

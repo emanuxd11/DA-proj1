@@ -2,7 +2,7 @@
 // Created by manu on 3/15/23.
 //
 
-#include "Database.h"
+#include "../includes/Database.h"
 
 std::unordered_map<int, Station> Database::loadStations() {
     std::unordered_map<int, Station> stationHash;
@@ -31,7 +31,7 @@ std::unordered_map<int, Station> Database::loadStations() {
             stationHash[count] = station;
             count++;
         }
-    }
+    }  else throw ("flights.csv file not found in dataset folder!");
 
     return stationHash;
 }
@@ -39,20 +39,21 @@ std::unordered_map<int, Station> Database::loadStations() {
 std::unordered_map<std::string, int> Database::stationsInverse(std::unordered_map<int, Station> stationHash) {
     std::unordered_map<std::string, int> inverse;
 
-    for (auto &it : stationHash) {
-        inverse[it.second.getName()] = it.first;
+    for (auto it = stationHash.begin(); it != stationHash.end(); it++) {
+        inverse[it->second.getName()] = it->first;
     }
     return inverse;
 }
 
-Graph Database::loadGraph(std::unordered_map<int, Station> stationHash) {
-    Graph g;
+Graph Database::loadGraph(Graph& g, std::unordered_map<int, Station>& stationHash) {
     std::ifstream network("../network.csv");
 
     if (network.is_open()) {
+        // Edge *edge;
         std::unordered_map<std::string, int> inverseStations = stationsInverse(stationHash);
 
         std::string line, origStation, destStation, capacity, throwaway;
+        int origId, destId, custo;
 
         getline(network, throwaway);
         while (getline(network, line)) {
@@ -62,16 +63,21 @@ Graph Database::loadGraph(std::unordered_map<int, Station> stationHash) {
             getline(sep, capacity, ',');
             getline(sep, line, '\n');
 
-            int origId = inverseStations[origStation];
-            int destId = inverseStations[destStation];
-            Station orig = stationHash[origId];
-            Station dest = stationHash[destId];
+            if(line == "STANDARD"){
+                custo = 2;
+            } else if(line == "ALFA PENDULAR"){
+                custo = 4;
+            }
 
-            g.addVertex(origId, orig);
-            g.addVertex(destId, dest);
-            g.addEdge(orig, dest, std::stod(capacity));
+            origId = inverseStations[origStation];
+            destId = inverseStations[destStation];
+
+            g.addVertex(origId);
+            g.addVertex(destId);
+
+            g.addEdge(origId, destId, std::stod(capacity), custo);
         }
-    }
+    } else throw ("flights.csv file not found in dataset folder!");
 
     return g;
 }
