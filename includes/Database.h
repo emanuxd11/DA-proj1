@@ -10,6 +10,7 @@
 #include <sstream>
 #include "Station.h"
 #include "Graph.h"
+#include <regex>
 
 class Database {
 public:
@@ -17,7 +18,7 @@ public:
 
     Graph loadGraph(std::unordered_map<int, Station>& stationHash);
 
-    std::unordered_map<std::string, int> stationsInverse(std::unordered_map<int, Station> stationHash);
+    static std::unordered_map<std::string, int> stationsByName(std::unordered_map<int, Station> stationHash);
 
 private:
     //

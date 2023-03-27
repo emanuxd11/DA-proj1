@@ -4,87 +4,100 @@
 
 #include "../includes/Database.h"
 
-void parseHelper(std::stringstream &in, std::string &str) {
-    if (in.str().front() == '"' ) {
-        in.str(in.str().substr(1));
-        getline(in, str, '"');
-    } else {
-        getline(in, str, ',');
+std::vector<std::string> lineParser(std::string line) {
+    std::vector<std::string> fields;
+    std::stringstream ss(line);
+    std::string field;
+    bool in_quotes = false;
+
+    while (std::getline(ss, field, ',')) {
+        if (field.empty()) {
+            fields.push_back(field);
+            continue;
+        }
+        if (!in_quotes) {
+            if (field.front() == '"' && field.back() != '"') {
+                field.erase(0, 1);
+                in_quotes = true;
+            } else if (field.front() == '"' && field.back() == '"') {
+                field = field.substr(1, field.size() - 2);
+            }
+            fields.push_back(field);
+        } else {
+            fields.back() += "," + field;
+            if (field.back() == '"') {
+                in_quotes = false;
+                fields.back().pop_back();
+            }
+        }
     }
 
-    if (str.size() + 1 < in.str().size()) {
-        in.str(in.str().substr(str.size() + 1));
+    return fields;
+}
+
+std::unordered_map<std::string, int> Database::stationsByName(std::unordered_map<int, Station> stationHash) {
+    std::unordered_map<std::string, int> inverse;
+    for (auto &it : stationHash) {
+        inverse[it.second.getName()] = it.first;
     }
+
+    return inverse;
 }
 
 std::unordered_map<int, Station> Database::loadStations() {
     std::unordered_map<int, Station> stationHash;
-
-    std::ifstream stations("../stations.csv");
+    std::ifstream stations("../docs/stations.csv");
 
     if (stations.is_open()) {
         int count = 0;
         Station station;
-        std::string row, name, district, municipality, township, line, throwaway;
-        getline(stations, throwaway);
-        while (getline(stations, row)) {
-            std::stringstream sep(row);
-            /* getline(sep, name, ',');
-            getline(sep, district, ',');
-            getline(sep, municipality, ',');
+        std::string line;
+        getline(stations, line); // throwaway first line read
 
-            // some townships are contained in ""
-            if (sep.str()[0] == '\"') {
-                // std::cout << sep.str() << std::endl;
-            }
-            getline(sep, township, ',');
+        while (getline(stations, line)) {
+            std::vector<std::string> fields = lineParser(line);
 
-            getline(sep, line, '\n'); */
-
-            station.setName(name);
-            station.setDistrict(district);
-            station.setMunicipality(municipality);
-            station.setTownship(township);
-            station.setLine(line);
+            station.setName(fields[0]);
+            station.setDistrict(fields[1]);
+            station.setMunicipality(fields[2]);
+            station.setTownship(fields[3]);
+            station.setLine(fields[4]);
 
             stationHash[count] = station;
             count++;
         }
-    }  else throw ("flights.csv file not found in dataset folder!");
+    } else throw std::runtime_error("stations.csv file not found in docs directory!");
 
     return stationHash;
 }
 
-std::unordered_map<std::string, int> Database::stationsInverse(std::unordered_map<int, Station> stationHash) {
-    std::unordered_map<std::string, int> inverse;
-
-    for (auto &it : stationHash) {
-        inverse[it.second.getName()] = it.first;
-    }
-    return inverse;
-}
-
-Graph Database::loadGraph(std::unordered_map<int, Station>& stationHash) {
+Graph Database::loadGraph(std::unordered_map<int, Station> &stationHash) {
     Graph g;
-    std::ifstream network("../network.csv");
+    std::ifstream network("../docs/network.csv");
 
     if (network.is_open()) {
-        std::unordered_map<std::string, int> inverseStations = stationsInverse(stationHash);
+        std::unordered_map<std::string, int> inverseStations = stationsByName(stationHash);
 
-        std::string line, origStation, destStation, capacity, throwaway;
+        std::string line, origStation, destStation, train_type;
         int origId, destId, custo;
+        double capacity;
 
-        getline(network, throwaway);
+        getline(network, line); // throwaway first line read
         while (getline(network, line)) {
-            std::stringstream sep(line);
-            getline(sep, origStation, ',');
-            getline(sep, destStation, ',');
-            getline(sep, capacity, ',');
-            getline(sep, line, '\n');
+            std::stringstream ss(line);
+            std::vector<std::string> fields = lineParser(line);
 
-            if(line == "STANDARD"){
+            origStation = fields[0];
+            destStation = fields[1];
+            try {
+                capacity = std::stod(fields[2]);
+            } catch (std::invalid_argument) {
+                capacity = -1.0;
+            }
+            train_type = fields[3];
+            if (train_type == "STANDARD") {
                 custo = 2;
-            } else if(line == "ALFA PENDULAR"){
+            } else if (train_type == "ALFA PENDULAR") {
                 custo = 4;
             }
 
@@ -94,9 +107,9 @@ Graph Database::loadGraph(std::unordered_map<int, Station>& stationHash) {
             g.addVertex(origId);
             g.addVertex(destId);
 
-            g.addEdge(origId, destId, std::stod(capacity), custo);
+            g.addEdge(origId, destId, capacity, custo);
         }
-    } else throw ("flights.csv file not found in dataset folder!");
+    } else throw std::runtime_error("network.csv file not found in docs directory!");
 
     return g;
 }
