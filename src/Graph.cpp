@@ -2,6 +2,22 @@
 
 #include "../includes/Graph.h"
 
+void Graph::setStationHash(std::unordered_map<int, Station> const &stations) {
+    this->stationHash = stations;
+}
+
+void Graph::setInvertedHash(std::unordered_map<std::string, int> const &stationsInverse) {
+    this->inverseHash = stationsInverse;
+}
+
+std::unordered_map<int, Station> Graph::getStationHash() {
+    return this->stationHash;
+}
+
+std::unordered_map<std::string, int> Graph::getInvertedHash() {
+    return inverseHash;
+}
+
 int Graph::getNumVertex() const {
     return vertexSet.size();
 }

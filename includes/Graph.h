@@ -9,6 +9,8 @@
 #include <limits>
 #include <algorithm>
 #include "MutablePriorityQueue.h"
+#include "Station.h"
+#include <unordered_map>
 
 #include "VertexEdge.h"
 
@@ -40,8 +42,19 @@ public:
 
     std::vector<Vertex *> getVertexSet() const;
 
+    void setStationHash(std::unordered_map<int, Station> const &stations);
+
+    void setInvertedHash(std::unordered_map<std::string, int> const &stationsInverse);
+
+    std::unordered_map<int, Station> getStationHash();
+
+    std::unordered_map<std::string, int> getInvertedHash();
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
+
+    // para aceder mais facilmente às estações, inseri aqui os mapas
+    std::unordered_map<int, Station> stationHash;
+    std::unordered_map<std::string, int> inverseHash;
 
     double **distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall

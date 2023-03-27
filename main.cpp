@@ -1,6 +1,5 @@
 #include <iostream>
 #include <unordered_map>
-#include <sstream>
 #include "includes/Graph.h"
 #include "includes/Database.h"
 #include "includes/Station.h"
@@ -15,9 +14,7 @@ int main() {
 
     // test
     for (Vertex *v : g.getVertexSet()) {
-        for (Edge *edge : v->getAdj()) {
-            cout << stationHash[edge->getDest()->getId()].getName() << endl;
-        }
+        cout << stationHash[v->getId()].getName() << endl;
     }
 
     return 0;
