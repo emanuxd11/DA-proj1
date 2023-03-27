@@ -7,39 +7,46 @@
 
 using namespace std;
 
+Graph getGraph() {
+    Database db;
+    std::unordered_map<int, Station> stationHash = db.loadStations();
+    return db.loadGraph(stationHash);
+}
 
 int main() {
     Database db;
-    std::unordered_map<int, Station> stationHash = db.loadStations();
+    unordered_map<int, Station> stationHash = db.loadStations();
+    unordered_map<string, int> inverseHash = db.stationsInverse(stationHash);
+    Graph g = db.loadGraph(stationHash);
 
-    Graph g;
-    db.loadGraph(g, stationHash);
+    for (Vertex *v : g.getVertexSet()) {
+    //    cout << stationHash[v->getId()].getTownship() << endl;
+    }
 
-    /*for (auto station : stationHash) {
-        std::cout << station.second.getName() << std::endl;
-    }*/
+    string line = "\"some\",\"comma\",\"sepa,rated\",\"words\"";
+    vector <string> tokens;
+    stringstream check1(line);
+    string intermediate;
+    while(!check1.eof()) {
+        if (check1.str().front() == '"' ) {
+            check1.str(check1.str().substr(1));
+            getline(check1, intermediate, '"');
+        } else {
+            getline(check1, intermediate, ',');
+        }
 
-   /* for (auto v : g.getVertexSet()) {
-        //Station st = stationHash[v->getId()];
-        //std::cout << st.getName() << std::endl;
+        if (!intermediate.empty()) {
+            tokens.push_back(intermediate);
+        }
 
-        if (g.findVertex(stati))
-            cout << "Not Present " << v->getId() << endl;
+        if (intermediate.size() + 1 < check1.str().size()) {
+            check1.str(check1.str().substr(intermediate.size() + 1));
+        }
+    }
 
-        //std::cout << v->getId() << std::endl;
-    }*/
-
-    //unordered_map<std::string, int> stationAux = db.stationsInverse(stationHash);
-
-    /*for(int i = 0; i < stationHash.size(); i++){
-        Station st = stationHash[i];
-        //int id = stationAux[st.getName()];
-        if(g.findVertex(i) == nullptr)
-            cout << "Not Present " << i  << " " << st.getName() << endl;
-    }*/
-
-    //std::cout << g.getNumVertex() << std::endl;
-    //std::cout << stationHash.size() << std::endl;
+    for (auto token : tokens) {
+        cout << token << ",";
+    }
 
     return 0;
 }

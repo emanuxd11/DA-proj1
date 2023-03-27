@@ -4,6 +4,19 @@
 
 #include "../includes/Database.h"
 
+void parseHelper(std::stringstream &in, std::string &str) {
+    if (in.str().front() == '"' ) {
+        in.str(in.str().substr(1));
+        getline(in, str, '"');
+    } else {
+        getline(in, str, ',');
+    }
+
+    if (str.size() + 1 < in.str().size()) {
+        in.str(in.str().substr(str.size() + 1));
+    }
+}
+
 std::unordered_map<int, Station> Database::loadStations() {
     std::unordered_map<int, Station> stationHash;
 
@@ -16,11 +29,17 @@ std::unordered_map<int, Station> Database::loadStations() {
         getline(stations, throwaway);
         while (getline(stations, row)) {
             std::stringstream sep(row);
-            getline(sep, name, ',');
+            /* getline(sep, name, ',');
             getline(sep, district, ',');
             getline(sep, municipality, ',');
+
+            // some townships are contained in ""
+            if (sep.str()[0] == '\"') {
+                // std::cout << sep.str() << std::endl;
+            }
             getline(sep, township, ',');
-            getline(sep, line, '\n');
+
+            getline(sep, line, '\n'); */
 
             station.setName(name);
             station.setDistrict(district);
@@ -39,17 +58,17 @@ std::unordered_map<int, Station> Database::loadStations() {
 std::unordered_map<std::string, int> Database::stationsInverse(std::unordered_map<int, Station> stationHash) {
     std::unordered_map<std::string, int> inverse;
 
-    for (auto it = stationHash.begin(); it != stationHash.end(); it++) {
-        inverse[it->second.getName()] = it->first;
+    for (auto &it : stationHash) {
+        inverse[it.second.getName()] = it.first;
     }
     return inverse;
 }
 
-Graph Database::loadGraph(Graph& g, std::unordered_map<int, Station>& stationHash) {
+Graph Database::loadGraph(std::unordered_map<int, Station>& stationHash) {
+    Graph g;
     std::ifstream network("../network.csv");
 
     if (network.is_open()) {
-        // Edge *edge;
         std::unordered_map<std::string, int> inverseStations = stationsInverse(stationHash);
 
         std::string line, origStation, destStation, capacity, throwaway;

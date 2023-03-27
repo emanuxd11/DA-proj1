@@ -15,7 +15,7 @@ class Database {
 public:
     std::unordered_map<int, Station> loadStations();
 
-    Graph loadGraph(Graph& g, std::unordered_map<int, Station>& stationHash);
+    Graph loadGraph(std::unordered_map<int, Station>& stationHash);
 
     std::unordered_map<std::string, int> stationsInverse(std::unordered_map<int, Station> stationHash);
 
