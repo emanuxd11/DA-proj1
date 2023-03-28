@@ -49,6 +49,8 @@ public:
     std::unordered_map<int, Station> getStationHash();
 
     std::unordered_map<std::string, int> getInvertedHash();
+
+    bool empty();
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
 

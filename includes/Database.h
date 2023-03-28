@@ -14,9 +14,9 @@
 
 class Database {
 public:
-    std::unordered_map<int, Station> loadStations();
+    static std::unordered_map<int, Station> loadStations();
 
-    Graph loadGraph(std::unordered_map<int, Station>& stationHash);
+    static Graph loadGraph();
 
     static std::unordered_map<std::string, int> stationsByName(std::unordered_map<int, Station> stationHash);
 

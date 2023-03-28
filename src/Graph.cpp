@@ -26,6 +26,10 @@ std::vector<Vertex *> Graph::getVertexSet() const {
     return vertexSet;
 }
 
+bool Graph::empty() {
+    return vertexSet.empty();
+}
+
 /*
  * Auxiliary function to find a vertex with a given content.
  */

@@ -4,7 +4,8 @@
 
 #include "../includes/Database.h"
 
-std::vector<std::string> lineParser(std::string line) {
+// métodos auxiliares
+std::vector<std::string> lineParser(std::string const &line) {
     std::vector<std::string> fields;
     std::stringstream ss(line);
     std::string field;
@@ -34,6 +35,29 @@ std::vector<std::string> lineParser(std::string line) {
 
     return fields;
 }
+
+int calculateTrainCost(std::string const &train_type) {
+    if (train_type.empty()) {
+        return -1;
+    }
+
+    if (train_type == "STANDARD") {
+        return 2;
+    } else if (train_type == "ALFA PENDULAR") {
+        return 4;
+    } else {
+        return -1;
+    }
+}
+
+double calculateLineCapacity(std::string const &capacity) {
+    try {
+        return std::stod(capacity);
+    } catch (std::invalid_argument) {
+        return -1.0;
+    }
+}
+// fim dos métodos auxiliares
 
 std::unordered_map<std::string, int> Database::stationsByName(std::unordered_map<int, Station> stationHash) {
     std::unordered_map<std::string, int> inverse;
@@ -71,45 +95,40 @@ std::unordered_map<int, Station> Database::loadStations() {
     return stationHash;
 }
 
-Graph Database::loadGraph(std::unordered_map<int, Station> &stationHash) {
-    Graph g;
+Graph Database::loadGraph() {
     std::ifstream network("../docs/network.csv");
+    if (!network.is_open()) {
+        throw std::runtime_error("network.csv file not found in docs directory!");
+    }
 
-    if (network.is_open()) {
-        std::unordered_map<std::string, int> inverseStations = stationsByName(stationHash);
+    Graph g;
+    std::unordered_map<int, Station> stationHash = loadStations();
+    std::unordered_map<std::string, int> inverseStations = stationsByName(stationHash);
 
-        std::string line, origStation, destStation, train_type;
-        int origId, destId, custo;
-        double capacity;
+    std::string line, origStation, destStation;
+    int origId, destId, custo;
+    double capacity;
 
-        getline(network, line); // throwaway first line read
-        while (getline(network, line)) {
-            std::stringstream ss(line);
-            std::vector<std::string> fields = lineParser(line);
+    getline(network, line); // throwaway first line read
+    while (getline(network, line)) {
+        std::stringstream ss(line);
+        std::vector<std::string> fields = lineParser(line);
 
-            origStation = fields[0];
-            destStation = fields[1];
-            try {
-                capacity = std::stod(fields[2]);
-            } catch (std::invalid_argument) {
-                capacity = -1.0;
-            }
-            train_type = fields[3];
-            if (train_type == "STANDARD") {
-                custo = 2;
-            } else if (train_type == "ALFA PENDULAR") {
-                custo = 4;
-            }
+        origStation = fields[0];
+        destStation = fields[1];
+        capacity = calculateLineCapacity(fields[2]);
+        custo = calculateTrainCost(fields[3]);
 
-            origId = inverseStations[origStation];
-            destId = inverseStations[destStation];
+        origId = inverseStations[origStation];
+        destId = inverseStations[destStation];
 
-            g.addVertex(origId);
-            g.addVertex(destId);
+        g.addVertex(origId);
+        g.addVertex(destId);
+        g.addEdge(origId, destId, capacity, custo);
+    }
 
-            g.addEdge(origId, destId, capacity, custo);
-        }
-    } else throw std::runtime_error("network.csv file not found in docs directory!");
+    g.setStationHash(stationHash);
+    g.setInvertedHash(inverseStations);
 
     return g;
 }
