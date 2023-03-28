@@ -101,6 +101,9 @@ public:
 
     void setCusto(int c);
 
+    bool isAlfaService() const;
+
+    bool isStandardService() const;
 protected:
     Vertex *dest; // destination vertex
     double weight; // edge weight, can also be used for capacity

@@ -155,3 +155,11 @@ void Edge::setFlow(double flow) {
 void Edge::setCusto(int c){
     this->custo = c;
 }
+
+bool Edge::isStandardService() const {
+    return custo == 2;
+}
+
+bool Edge::isAlfaService() const {
+    return custo == 4;
+}
