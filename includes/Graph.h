@@ -50,6 +50,8 @@ public:
 
     std::unordered_map<std::string, int> getInvertedHash();
 
+    int maxFlowStations(int source, int target);
+
     bool empty();
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
@@ -65,6 +67,8 @@ protected:
      * Finds the index of the vertex with a given content.
      */
     int findVertexIdx(const int &id) const;
+
+    bool findAugmentingPath(Vertex *s, Vertex *t);
 };
 
 void deleteMatrix(int **m, int n);

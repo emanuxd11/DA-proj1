@@ -124,7 +124,7 @@ Graph Database::loadGraph() {
 
         g.addVertex(origId);
         g.addVertex(destId);
-        g.addEdge(origId, destId, capacity, custo);
+        g.addBidirectionalEdge(origId, destId, capacity, custo);
     }
 
     g.setStationHash(stationHash);

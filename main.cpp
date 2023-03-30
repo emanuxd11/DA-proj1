@@ -11,14 +11,112 @@ Graph initGraph() {
     return Database::loadGraph();
 }
 
-// opção 2, ver 7 da TP3
-Graph maxTrainFlow(Graph network, string const &source, string const &dest) {
-    return network;
+// opção 2
+// auxiliar
+bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
+    for(auto v : vertexSet) {
+        v->setVisited(false);
+    }
+    s->setVisited(true);
+    std::queue<Vertex *> q;
+    q.push(s);
+    while(!q.empty() && ! t->isVisited()) {
+        auto v = q.front();
+        q.pop();
+        for(auto e: v->getAdj()) {
+            auto w = e->getDest();
+            double residual = e->getWeight() - e->getFlow();
+            if (! w->isVisited() && residual > 0) {
+                w->setVisited(true);
+                w->setPath(e);
+                q.push(w);
+            }
+        }
+        for(auto e: v->getIncoming()) {
+            auto w = e->getOrig();
+            double residual = e->getFlow();
+            if (! w->isVisited() && residual > 0) {
+                w->setVisited(true);
+                w->setPath(e);
+                q.push(w);
+            }
+        }
+    }
+    return t->isVisited();
+}
+
+int Graph::maxFlowStations(int source, int target) {
+    double res;
+    Vertex* s = findVertex(source);
+    Vertex* t = findVertex(target);
+
+    if (s == nullptr || t == nullptr || s == t) {
+        throw std::logic_error("Invalid source and/or target vertex");
+    }
+
+    // Reset the flows
+    for (auto v : vertexSet) {
+        for (auto e: v->getAdj()) {
+            e->setFlow(0);
+        }
+    }
+
+    // Loop to find augmentation paths
+    while (findAugmentingPath(s, t)) {
+        double f = INF;
+        for (auto v = t; v != s; ) {
+            auto e = v->getPath();
+            if (e->getDest() == v) {
+                f = std::min(f, e->getWeight() - e->getFlow());
+                v = e->getOrig();
+            }
+            else {
+                f = std::min(f, e->getFlow());
+                v = e->getDest();
+            }
+        }
+        for (auto v = t; v != s; ) {
+            auto e = v->getPath();
+            double flow = e->getFlow();
+            if (e->getDest() == v) {
+                e->setFlow(flow + f);
+                v = e->getOrig();
+            }
+            else {
+                e->setFlow(flow - f);
+                v = e->getDest();
+            }
+        }
+        res += f;
+    }
+
+    return res;
 }
 
 // opção 3
-vector<Station> largestCapPair(Graph network) {
-    return vector<Station>();
+vector<vector<Station>> largestCapPair(Graph network) {
+    vector<vector<Station>> res;
+    unordered_map<int, Station> stations = network.getStationHash();
+    int largest = -1;
+
+    for (int i = 0; i < network.getVertexSet().size(); i++) {
+        for (int j = i + 1; j < network.getVertexSet().size(); j++) {
+            auto v = network.findVertex(i);
+            auto u = network.findVertex(j);
+            if (u == v) continue;
+            int flow = network.maxFlowStations(v->getId(), u->getId());
+            if (flow == largest) {
+                vector<Station> current = { stations[v->getId()], stations[u->getId()] };
+                res.push_back(current);
+            } else if (flow > largest) {
+                res.clear();
+                vector<Station> current = { stations[v->getId()], stations[u->getId()] };
+                res.push_back(current);
+            }
+        }
+    }
+
+    return res;
 }
 
 // opção 4
@@ -61,13 +159,20 @@ void displayMenu() {
     cout << "Insert option: ";
 }
 
+string getInput() {
+    string input_string;
+    getline(cin, input_string);
+    return input_string;
+}
+
 int main() {
     Graph g;
 
-    int opt = 0;
-    while (true) {
+    int opt = 1;
+    while (opt) {
         displayMenu();
         cin >> opt;
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         if (opt == 1) {
             g = initGraph();
@@ -75,11 +180,13 @@ int main() {
             if (g.empty()) g = initGraph();
             string orig, dest;
             cout << "Insert name of origin station: ";
-            cin >> orig;
+            orig = getInput();
             cout << "Insert name of destiny station: ";
-            cin >> dest;
-            g = maxTrainFlow(g, orig, dest);
-            cout << "do something with the output" << endl;
+            dest = getInput();
+            int origId = g.getInvertedHash()[orig];
+            int destId = g.getInvertedHash()[dest];
+
+            cout << "result: " << g.maxFlowStations(origId, destId) << endl;
         } else if (opt == 3) {
             if (g.empty()) g = initGraph();
             auto stations = largestCapPair(g);
