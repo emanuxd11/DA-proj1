@@ -12,7 +12,6 @@ Graph initGraph() {
 }
 
 // opção 2
-// auxiliar
 bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
     for(auto v : vertexSet) {
         v->setVisited(false);
@@ -94,24 +93,28 @@ int Graph::maxFlowStations(int source, int target) {
 }
 
 // opção 3
-vector<vector<Station>> largestCapPair(Graph network) {
-    vector<vector<Station>> res;
+struct solution3 {
+    vector<vector<Station>> station_pairs;
+    int maxFlow;
+};
+
+solution3 largestCapPair(Graph network) {
+    solution3 res;
+    res.maxFlow = -1;
     unordered_map<int, Station> stations = network.getStationHash();
-    int largest = -1;
 
     for (int i = 0; i < network.getVertexSet().size(); i++) {
+        if (!network.findVertex(i)) continue;
         for (int j = i + 1; j < network.getVertexSet().size(); j++) {
-            auto v = network.findVertex(i);
-            auto u = network.findVertex(j);
-            if (u == v) continue;
-            int flow = network.maxFlowStations(v->getId(), u->getId());
-            if (flow == largest) {
-                vector<Station> current = { stations[v->getId()], stations[u->getId()] };
-                res.push_back(current);
-            } else if (flow > largest) {
-                res.clear();
-                vector<Station> current = { stations[v->getId()], stations[u->getId()] };
-                res.push_back(current);
+            if (!network.findVertex(j)) continue;
+
+            int flow = network.maxFlowStations(i, j);
+            if (flow == res.maxFlow) {
+                res.station_pairs.push_back({ stations[i], stations[j] });
+            } else if (flow > res.maxFlow) {
+                res.station_pairs.clear();
+                res.station_pairs.push_back({ stations[i], stations[j] });
+                res.maxFlow = flow;
             }
         }
     }
@@ -185,12 +188,17 @@ int main() {
             dest = getInput();
             int origId = g.getInvertedHash()[orig];
             int destId = g.getInvertedHash()[dest];
-
             cout << "result: " << g.maxFlowStations(origId, destId) << endl;
         } else if (opt == 3) {
             if (g.empty()) g = initGraph();
-            auto stations = largestCapPair(g);
-            cout << "do something with the output" << endl;
+
+            cout << "Please wait, this may take a few minutes..." << endl;
+            solution3 result = largestCapPair(g);
+            cout << "These stations require the most amount of trains when working at full capacity:" << endl;
+            for (auto station_pair : result.station_pairs) {
+                cout << station_pair.front().getName() << " -> " << station_pair.back().getName() << endl;
+            }
+
         } else if (opt == 4) {
             if (g.empty()) g = initGraph();
             int k;
