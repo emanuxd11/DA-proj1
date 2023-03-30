@@ -34,9 +34,16 @@ bool Graph::empty() {
  * Auxiliary function to find a vertex with a given content.
  */
 Vertex *Graph::findVertex(const int &id) const {
-    for (auto v: vertexSet)
-        if (v->getId() == id)
+    /* if (stationHash.count(id) == 0) {
+        return nullptr;
+    } */
+
+    for (auto v: vertexSet) {
+        if (v->getId() == id) {
             return v;
+        }
+    }
+
     return nullptr;
 }
 

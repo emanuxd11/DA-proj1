@@ -112,7 +112,7 @@ solution3 largestCapPair(Graph network) {
             if (flow == res.maxFlow) {
                 res.station_pairs.push_back({ stations[i], stations[j] });
             } else if (flow > res.maxFlow) {
-                res.station_pairs.clear();
+                res.station_pairs.erase(res.station_pairs.begin(), res.station_pairs.end());
                 res.station_pairs.push_back({ stations[i], stations[j] });
                 res.maxFlow = flow;
             }
@@ -188,13 +188,17 @@ int main() {
             dest = getInput();
             int origId = g.getInvertedHash()[orig];
             int destId = g.getInvertedHash()[dest];
+
+            cout << "origin: " << origId << endl;
+            cout << "destiny: " << destId << endl;
+
             cout << "result: " << g.maxFlowStations(origId, destId) << endl;
         } else if (opt == 3) {
             if (g.empty()) g = initGraph();
 
             cout << "Please wait, this may take a few minutes..." << endl;
             solution3 result = largestCapPair(g);
-            cout << "These stations require the most amount of trains when working at full capacity:" << endl;
+            cout << "These stations require the most amount of trains when working at full capacity (" << result.maxFlow << " trains)" << endl;
             for (auto station_pair : result.station_pairs) {
                 cout << station_pair.front().getName() << " -> " << station_pair.back().getName() << endl;
             }
