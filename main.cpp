@@ -133,9 +133,34 @@ int maxSimTrainStation(Graph network, string const &station_name) {
 }
 
 // opção 6
-int maxTrainMinCost(Graph network, string const &orig, string const &dest) {
-    return 0;
+int maxTrainMinCost(Graph network, int source, int target) {
+    //verificação do input
+    double res;
+    Vertex* s = findVertex(source);
+    Vertex* t = findVertex(target);
+
+    if (s == nullptr || t == nullptr || s == t) {
+        throw "Invalid source and/or target vertex";
+    }
+
+    resetFlows();
+
+    while(findAugmentationPath(s, t)) {
+        double f = findMinResidualAlongPath(s, t);
+        augmentFlowAlongPath(s, t, f);
+    }
+
+    return maxFlow;
 }
+
+void resetFlows(){
+    for (auto v : vertexSet) {
+        for (auto e: v->getAdj()) {
+            e->setFlow(0);
+        }
+    }
+}
+
 
 // opção 7
 int maxTrain(Graph reduced_network, string const &orig, string const &dest) {
