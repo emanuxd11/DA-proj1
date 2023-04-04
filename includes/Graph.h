@@ -52,6 +52,11 @@ public:
 
     int maxFlowStations(int source, int target);
 
+    int bellmanFordAlgorithm(Graph graph, int src, int dest);
+
+    int calcularCusto();
+
+    int maxTrainMinCost(Graph network, int source, int target)
     bool empty();
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set

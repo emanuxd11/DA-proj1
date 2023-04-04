@@ -1,6 +1,7 @@
 #include <iostream>
 #include <unordered_map>
 #include "includes/Graph.h"
+#include "includes/VertexEdge.h"
 #include "includes/Database.h"
 #include "includes/Station.h"
 
@@ -132,34 +133,107 @@ int maxSimTrainStation(Graph network, string const &station_name) {
     return 0;
 }
 
-// opção 6
-int maxTrainMinCost(Graph network, int source, int target) {
-    //verificação do input
-    double res;
-    Vertex* s = findVertex(source);
-    Vertex* t = findVertex(target);
+// The main function that finds shortest distances from src
+// to all other vertices using Bellman-Ford algorithm.  The
+// function also detects negative weight cycle
+int Graph::bellmanFordAlgorithm(Graph graph, int src, int dest)
+{
+    int V = graph.getNumVertex();
+    int dist[V];
 
-    if (s == nullptr || t == nullptr || s == t) {
-        throw "Invalid source and/or target vertex";
+    // Step 1: Initialize distances from src to all other
+    // vertices as INFINITE
+    for(auto v : vertexSet) {
+        int i = v->getId();
+        dist[i] = INT_MAX;
+    }
+    dist[src] = 0;
+
+    // Step 2: Relax all edges |V| - 1 times. A simple
+    // shortest path from src to any other vertex can have
+    // at-most |V| - 1 edges
+    for(auto v : vertexSet) {
+        for(auto e: v->getAdj()) {
+            Vertex* vertexU = e->getOrig();
+            Vertex* vertexV = e->getDest();
+            int u = vertexU->getId();
+            int v = vertexV->getId();
+
+            if (dist[u] != INT_MAX && dist[u] + e->getCusto() < dist[v])
+                dist[v] = dist[u] + e->getCusto();
+        }
     }
 
-    resetFlows();
+    return dist[dest];
 
-    while(findAugmentationPath(s, t)) {
-        double f = findMinResidualAlongPath(s, t);
-        augmentFlowAlongPath(s, t, f);
-    }
-
-    return maxFlow;
 }
 
-void resetFlows(){
+double findMinResidualAlongPath(Vertex *s, Vertex *t) {
+    double f = INF;
+    for (auto v = t; v != s; ) {
+        auto e = v->getPath();
+        if (e->getDest() == v) {
+            f = std::min(f, e->getWeight() - e->getFlow());
+            v = e->getOrig();
+        }
+        else {
+            f = std::min(f, e->getFlow());
+            v = e->getDest();
+        }
+    }
+    return f;
+}
+
+void augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
+    for (auto v = t; v != s; ) {
+        auto e = v->getPath();
+        double flow = e->getFlow();
+        if (e->getDest() == v) {
+            e->setFlow(flow + f);
+            v = e->getOrig();
+        }
+        else {
+            e->setFlow(flow - f);
+            v = e->getDest();
+        }
+    }
+}
+
+int Graph::calcularCusto(){
+    for (auto v : vertexSet) {
+        for (auto e: v->getAdj()) {
+            if(e->getFlow() > 0){
+
+            }
+        }
+    }
+}
+
+// opção 6
+int Graph::maxTrainMinCost(Graph network, int source, int target) {
+    Vertex* s = findVertex(source);
+    Vertex* t = findVertex(target);
+    if (s == nullptr || t == nullptr || s == t)
+        throw "Invalid source and/or target vertex";
+
+    // Reset the flows
     for (auto v : vertexSet) {
         for (auto e: v->getAdj()) {
             e->setFlow(0);
         }
     }
+    int custo;
+    // Loop to find augmentation paths
+    while(bellmanFordAlgorithm(network, source, target) != INT_MAX) {
+        double f = findMinResidualAlongPath(s, t);
+        augmentFlowAlongPath(s, t, f);
+    }
+
+    int cost = calcularCusto(network)
+
+    return maxFlow;
 }
+
 
 
 // opção 7
