@@ -10,7 +10,7 @@ Vertex::Vertex(int id) : id(id) {}
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
-Edge *Vertex::addEdge(Vertex *d, double w, int c) {
+Edge *Vertex::addEdge(Vertex *d, int w, int c) {
     auto newEdge = new Edge(this, d, w, c);
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
@@ -72,7 +72,7 @@ unsigned int Vertex::getIndegree() const {
     return this->indegree;
 }
 
-double Vertex::getDist() const {
+int Vertex::getDist() const {
     return this->dist;
 }
 
@@ -100,23 +100,24 @@ void Vertex::setIndegree(unsigned int indegree) {
     this->indegree = indegree;
 }
 
-void Vertex::setDist(double dist) {
+void Vertex::setDist(int dist) {
     this->dist = dist;
 }
 
 void Vertex::setPath(Edge *path) {
     this->path = path;
+    int hihi;
 }
 
 /********************** Edge  ****************************/
 
-Edge::Edge(Vertex *orig, Vertex *dest, double w, int c) : orig(orig), dest(dest), weight(w), custo(c) {}
+Edge::Edge(Vertex *orig, Vertex *dest, int w, int c) : orig(orig), dest(dest), weight(w), custo(c) {}
 
 Vertex *Edge::getDest() const {
     return this->dest;
 }
 
-double Edge::getWeight() const {
+int Edge::getWeight() const {
     return this->weight;
 }
 
@@ -136,7 +137,7 @@ bool Edge::isSelected() const {
     return this->selected;
 }
 
-double Edge::getFlow() const {
+int Edge::getFlow() const {
     return flow;
 }
 
@@ -148,7 +149,7 @@ void Edge::setReverse(Edge *reverse) {
     this->reverse = reverse;
 }
 
-void Edge::setFlow(double flow) {
+void Edge::setFlow(int flow) {
     this->flow = flow;
 }
 

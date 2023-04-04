@@ -25,7 +25,7 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
         q.pop();
         for(auto e: v->getAdj()) {
             auto w = e->getDest();
-            double residual = e->getWeight() - e->getFlow();
+            int residual = e->getWeight() - e->getFlow();
             if (! w->isVisited() && residual > 0) {
                 w->setVisited(true);
                 w->setPath(e);
@@ -34,7 +34,7 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
         }
         for(auto e: v->getIncoming()) {
             auto w = e->getOrig();
-            double residual = e->getFlow();
+            int residual = e->getFlow();
             if (! w->isVisited() && residual > 0) {
                 w->setVisited(true);
                 w->setPath(e);
@@ -46,7 +46,7 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
 }
 
 int Graph::maxFlowStations(int source, int target) {
-    double res;
+    int res;
     Vertex* s = findVertex(source);
     Vertex* t = findVertex(target);
 
@@ -63,7 +63,7 @@ int Graph::maxFlowStations(int source, int target) {
 
     // Loop to find augmentation paths
     while (findAugmentingPath(s, t)) {
-        double f = INF;
+        int f = UINT8_MAX;
         for (auto v = t; v != s; ) {
             auto e = v->getPath();
             if (e->getDest() == v) {
@@ -77,7 +77,7 @@ int Graph::maxFlowStations(int source, int target) {
         }
         for (auto v = t; v != s; ) {
             auto e = v->getPath();
-            double flow = e->getFlow();
+            int flow = e->getFlow();
             if (e->getDest() == v) {
                 e->setFlow(flow + f);
                 v = e->getOrig();
@@ -133,43 +133,52 @@ int maxSimTrainStation(Graph network, string const &station_name) {
     return 0;
 }
 
+struct CompareVertex {
+    bool operator()(Vertex* v1, Vertex* v2) {
+        return v1->getDist() > v2->getDist();
+    }
+};
+
 // The main function that finds shortest distances from src
 // to all other vertices using Bellman-Ford algorithm.  The
 // function also detects negative weight cycle
-int Graph::bellmanFordAlgorithm(Graph graph, int src, int dest)
-{
-    int V = graph.getNumVertex();
-    int dist[V];
+int Graph::dijkstra(Vertex* src, Vertex* dest) {
 
     // Step 1: Initialize distances from src to all other
-    // vertices as INFINITE
+    // vertices as UINT8_MAX INITE
     for(auto v : vertexSet) {
-        int i = v->getId();
-        dist[i] = INT_MAX;
+        v->setDist(UINT8_MAX);
+        v->setPath(nullptr);
     }
-    dist[src] = 0;
+    src->setDist(0);
 
-    // Step 2: Relax all edges |V| - 1 times. A simple
-    // shortest path from src to any other vertex can have
-    // at-most |V| - 1 edges
-    for(auto v : vertexSet) {
-        for(auto e: v->getAdj()) {
-            Vertex* vertexU = e->getOrig();
-            Vertex* vertexV = e->getDest();
-            int u = vertexU->getId();
-            int v = vertexV->getId();
 
-            if (dist[u] != INT_MAX && dist[u] + e->getCusto() < dist[v])
-                dist[v] = dist[u] + e->getCusto();
+    priority_queue<Vertex*, vector<Vertex*>, CompareVertex> priorityQueue;
+    priorityQueue.push(src);
+
+    while(!priorityQueue.empty()){
+        Vertex* current = priorityQueue.top();
+        priorityQueue.pop();
+
+        for(auto& e : current->getAdj()){
+            if(e->getFlow() < e->getWeight()){
+                Vertex* neighbor = e->getDest();
+                int new_dist = current->getDist() + e->getWeight();
+                if(new_dist < neighbor->getDist()){
+                    neighbor->setDist(new_dist);
+                    priorityQueue.push(neighbor);
+                    neighbor->setPath(e);
+                }
+            }
         }
     }
 
-    return dist[dest];
+    return dest->getDist();
 
 }
 
-double findMinResidualAlongPath(Vertex *s, Vertex *t) {
-    double f = INF;
+int findMinResidualAlongPath(Vertex *s, Vertex *t) {
+    int f = UINT8_MAX;
     for (auto v = t; v != s; ) {
         auto e = v->getPath();
         if (e->getDest() == v) {
@@ -184,10 +193,10 @@ double findMinResidualAlongPath(Vertex *s, Vertex *t) {
     return f;
 }
 
-void augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
-    for (auto v = t; v != s; ) {
-        auto e = v->getPath();
-        double flow = e->getFlow();
+void augmentFlowAlongPath(Vertex *s, Vertex *t, int f) {
+    for (auto& v = t; v != s; ) {
+        auto* e = v->getPath();
+        int flow = e->getFlow();
         if (e->getDest() == v) {
             e->setFlow(flow + f);
             v = e->getOrig();
@@ -199,18 +208,8 @@ void augmentFlowAlongPath(Vertex *s, Vertex *t, double f) {
     }
 }
 
-int Graph::calcularCusto(){
-    for (auto v : vertexSet) {
-        for (auto e: v->getAdj()) {
-            if(e->getFlow() > 0){
-
-            }
-        }
-    }
-}
-
 // opção 6
-int Graph::maxTrainMinCost(Graph network, int source, int target) {
+pair <int, int> Graph::maxTrainMinCost(int source, int target) {
     Vertex* s = findVertex(source);
     Vertex* t = findVertex(target);
     if (s == nullptr || t == nullptr || s == t)
@@ -222,16 +221,34 @@ int Graph::maxTrainMinCost(Graph network, int source, int target) {
             e->setFlow(0);
         }
     }
-    int custo;
     // Loop to find augmentation paths
-    while(bellmanFordAlgorithm(network, source, target) != INT_MAX) {
-        double f = findMinResidualAlongPath(s, t);
+    while(dijkstra(s, t) != UINT8_MAX) {
+        int f = findMinResidualAlongPath(s, t);
         augmentFlowAlongPath(s, t, f);
     }
 
-    int cost = calcularCusto(network)
 
-    return maxFlow;
+    //int cost = calcularCusto();
+    int cost = 0, maxFlow = 0;
+
+    for (auto v : vertexSet) {
+        for (auto e: v->getAdj()) {
+            if(e->getFlow() > 0){
+                cost += e->getFlow()*e->getCusto();
+            }
+            if(e->getDest() == t){
+                maxFlow += e->getFlow();
+            }
+        }
+    }
+
+
+
+    pair <int, int> cost_flow;
+    cost_flow.first = cost;
+    cost_flow.second = maxFlow;
+
+    return cost_flow;
 }
 
 
@@ -263,12 +280,12 @@ void displayMenu() {
 
 string getInput() {
     string input_string;
-    getline(cin, input_string);
+    std::getline(std::cin, input_string);
     return input_string;
 }
 
 int main() {
-    Graph g;
+    Graph g = initGraph();
 
     int opt = 1;
     while (opt) {
@@ -320,11 +337,23 @@ int main() {
             if (g.empty()) g = initGraph();
             string orig, dest;
             cout << "Insert origin station: ";
-            cin >> orig;
+            orig = getInput();
             cout << "Insert destiny station: ";
-            cin >> dest;
-            int num = maxTrainMinCost(g, orig, dest);
-            cout << "do something with the output" << endl;
+            dest = getInput();
+
+            cout << "origin " << orig << endl;
+            cout << "dest " << dest << endl;
+
+            int origId = g.getInvertedHash()[orig];
+            int destId = g.getInvertedHash()[dest];
+
+            cout << "origin: " << origId << endl;
+            cout << "destiny: " << destId << endl;
+            cout << "aaaaa: " << g.getStationHash().find(destId)->second.getName() <<endl;
+
+            pair<int, int> cost_flow = g.maxTrainMinCost(origId, destId);
+            cout << "Numero de comboios em simultaneo (maxFlow): " << cost_flow.second << endl;
+            cout << "Custo Minimo: " << cost_flow.first << endl;
         } else if (opt == 7) {
             if (g.empty()) g = initGraph();
             // obter estações para remover
@@ -334,7 +363,7 @@ int main() {
             cin >> orig;
             cout << "Insert destiny station: ";
             cin >> dest;
-            int num = maxTrainMinCost(g, orig, dest);
+            //int num = maxTrainMinCost(g, orig, dest);
             cout << "do something with the output" << endl;
         } else if (opt == 8) {
             if (g.empty()) g = initGraph();

@@ -37,17 +37,10 @@ std::vector<std::string> lineParser(std::string const &line) {
 }
 
 int calculateTrainCost(std::string const &train_type) {
-    if (train_type.empty()) {
-        return -1;
-    }
-
-    if (train_type == "STANDARD") {
+    if (train_type == "STANDARD")
         return 2;
-    } else if (train_type == "ALFA PENDULAR") {
+    else
         return 4;
-    } else {
-        return -1;
-    }
 }
 
 double calculateLineCapacity(std::string const &capacity) {
@@ -62,6 +55,9 @@ double calculateLineCapacity(std::string const &capacity) {
 std::unordered_map<std::string, int> Database::stationsByName(std::unordered_map<int, Station> stationHash) {
     std::unordered_map<std::string, int> inverse;
     for (auto &it : stationHash) {
+        if(it.second.getName() == "Póvoa"){
+            std::cout << "Póboaaaa: " << it.first << std::endl;
+        }
         inverse[it.second.getName()] = it.first;
     }
 
@@ -125,6 +121,7 @@ Graph Database::loadGraph() {
         g.addVertex(origId);
         g.addVertex(destId);
         g.addBidirectionalEdge(origId, destId, capacity, custo);
+//        g.addEdge(origId, destId, capacity, custo);
     }
 
     g.setStationHash(stationHash);
