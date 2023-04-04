@@ -129,7 +129,29 @@ vector<string> topKMunDistr(Graph network) {
 
 // opção 5
 int maxSimTrainStation(Graph network, string const &station_name) {
-    return 0;
+    int super_source_ID = -1;
+    vector<int> ids;
+    network.addVertex(super_source_ID);
+
+    for (auto v : network.getVertexSet()) {
+        if (v->getAdj().size() == 1) {
+            network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCusto());
+            ids.push_back(v->getId());
+        } else if (v->getAdj().size() == 2) {
+            if (v->getAdj()[0]->getCusto() != v->getAdj()[1]->getCusto()) {
+                network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCusto());
+                network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[1]->getCusto());
+                ids.push_back(v->getId());
+            }
+        }
+    }
+
+    int maxFlow = network.maxFlowStations(super_source_ID, network.getInvertedHash()[station_name]);
+    for (int id : ids) {
+        network.findVertex(super_source_ID)->removeEdge(id);
+    }
+
+    return maxFlow;
 }
 
 // opção 6
@@ -214,9 +236,9 @@ int main() {
             if (g.empty()) g = initGraph();
             string station_name;
             cout << "Insert station name: ";
-            cin >> station_name;
+            station_name = getInput();
             int num = maxSimTrainStation(g, station_name);
-            cout << "do something with the output" << endl;
+            cout << num << " trains can arrive at " << station_name << " simultaneously" << endl;
         } else if (opt == 6) {
             if (g.empty()) g = initGraph();
             string orig, dest;
