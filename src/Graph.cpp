@@ -103,6 +103,16 @@ void deleteMatrix(int **m, int n) {
     }
 }
 
+//void Graph::print(){
+//    for (auto v : this->vertexSet) {
+//        for(auto e : v->getAdj()){
+//            if (e->getFlow()!=0){
+//                std::cout << e->getOrig() << e->getDest()  << e->getFlow() << std::endl;
+//            }
+//        }
+//    }
+//}
+
 Graph::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());
     deleteMatrix(pathMatrix, vertexSet.size());

@@ -56,6 +56,8 @@ public:
 
     std::pair<int, int> maxTrainMinCost(int source, int target);
 
+    //void print();
+
     bool empty();
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set

@@ -55,9 +55,9 @@ double calculateLineCapacity(std::string const &capacity) {
 std::unordered_map<std::string, int> Database::stationsByName(std::unordered_map<int, Station> stationHash) {
     std::unordered_map<std::string, int> inverse;
     for (auto &it : stationHash) {
-        if(it.second.getName() == "Póvoa"){
-            std::cout << "Póboaaaa: " << it.first << std::endl;
-        }
+//        if(it.second.getName() == "Póvoa"){
+//            std::cout << "Póboaaaa: " << it.first << std::endl;
+//        }
         inverse[it.second.getName()] = it.first;
     }
 
