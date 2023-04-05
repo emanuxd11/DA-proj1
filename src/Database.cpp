@@ -120,7 +120,7 @@ Graph Database::loadGraph() {
 
         g.addVertex(origId);
         g.addVertex(destId);
-        g.addBidirectionalEdge(origId, destId, capacity, custo);
+        g.addBidirectionalEdge(origId, destId, (capacity/2), custo);
 //        g.addEdge(origId, destId, capacity, custo);
     }
 
