@@ -1,6 +1,5 @@
 #include <iostream>
 #include <unordered_map>
-#include <map>
 #include "includes/Graph.h"
 #include "includes/VertexEdge.h"
 #include "includes/Database.h"
@@ -124,59 +123,8 @@ solution3 largestCapPair(Graph network) {
     return res;
 }
 
-unsigned transportationNeed(Graph &network, string const &district){
-    int superSourceId = -1;
-    int superSinkId = network.getNumVertex();
-
-    vector<int> in;
-    vector<int> out;
-
-    network.addVertex(superSourceId);
-    network.addVertex(superSinkId);
-
-    std::unordered_map<int, Station> stations = network.getStationHash();
-
-    for (auto v : network.getVertexSet()) {
-        if(v->getId() == superSourceId || v->getId() == superSinkId) continue;
-        if (stations[v->getId()].getDistrict() == district){
-            network.addEdge(superSourceId, v->getId(), INF, 0);
-        }else{
-            network.addEdge(v->getId(), superSinkId, INF, 0);
-        }
-    }
-
-    int maxFlow = network.maxFlowStations(superSourceId, superSinkId);
-
-    for (int id : in) {
-        network.findVertex(superSourceId)->removeEdge(id);
-    }
-
-    for (int id : out) {
-        network.findVertex(id)->removeEdge(superSinkId);
-    }
-
-    network.deleteVertex(superSourceId);
-    network.deleteVertex(superSinkId)
-
-    return maxFlow;
-}
-
 // opção 4
-vector<string> topKMunDistr(Graph &network, unsigned k, bool municipality) {
-    unordered_map<string,int> needs;
-    vector<string> results;
-
-    unordered_set<string> districts = Database::getDistricts();
-
-    for(string &district: districts){
-        needs[district] = transportationNeed(network, district);
-        results.pushback(districts);
-    }
-
-    results.sort(results.begin(), results.end(), [](const string &a, const string &b){
-        return needs[a] > needs[b];
-    });
-    
+vector<string> topKMunDistr(Graph network) {
     return vector<string>();
 }
 

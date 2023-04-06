@@ -68,16 +68,6 @@ bool Graph::addVertex(const int &id) {
     return true;
 }
 
-bool Graph::deleteVertex(const int &id){
-    for (auto it = vertexSet.begin(); it != vertexSet.end(); ++it) {
-        if (*it->getId() == id) {
-            vertexSet.erase(it);
-            return true;
-        }
-    }
-    return false;
-}
-
 /*
  * Adds an edge to a graph (this), given the contents of the source and
  * destination vertices and the edge weight (w).
