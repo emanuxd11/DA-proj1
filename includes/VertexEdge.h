@@ -12,7 +12,7 @@
 
 class Edge;
 
-#define INF std::numeric_limits<double>::max()
+#define INF std::numeric_limits<int>::max()
 
 /************************* Vertex  **************************/
 
@@ -32,7 +32,7 @@ public:
 
     unsigned int getIndegree() const;
 
-    double getDist() const;
+    int getDist() const;
 
     Edge *getPath() const;
 
@@ -46,11 +46,11 @@ public:
 
     void setIndegree(unsigned int indegree);
 
-    void setDist(double dist);
+    void setDist(int dist);
 
     void setPath(Edge *path);
 
-    Edge *addEdge(Vertex *dest, double w, int c);
+    Edge *addEdge(Vertex *dest, int w, int c);
 
     bool removeEdge(int destID);
 
@@ -65,7 +65,7 @@ protected:
     bool visited = false; // used by DFS, BFS, Prim ...
     bool processing = false; // used by isDAG (in addition to the visited attribute)
     unsigned int indegree; // used by topsort
-    double dist = 0;
+    int dist = 0;
     Edge *path = nullptr;
 
     std::vector<Edge *> incoming; // incoming edges
@@ -77,11 +77,11 @@ protected:
 
 class Edge {
 public:
-    Edge(Vertex *orig, Vertex *dest, double w, int c);
+    Edge(Vertex *orig, Vertex *dest, int w, int c);
 
     Vertex *getDest() const;
 
-    double getWeight() const;
+    int getWeight() const;
 
     int getCusto() const;
 
@@ -91,13 +91,13 @@ public:
 
     Edge *getReverse() const;
 
-    double getFlow() const;
+    int getFlow() const;
 
     void setSelected(bool selected);
 
     void setReverse(Edge *reverse);
 
-    void setFlow(double flow);
+    void setFlow(int flow);
 
     void setCusto(int c);
 
@@ -106,7 +106,7 @@ public:
     bool isStandardService() const;
 protected:
     Vertex *dest; // destination vertex
-    double weight; // edge weight, can also be used for capacity
+    int weight; // edge weight, can also be used for capacity
     int custo;
 
     // auxiliary fields
@@ -116,7 +116,7 @@ protected:
     Vertex *orig;
     Edge *reverse = nullptr;
 
-    double flow; // for flow-related problems
+    int flow; // for flow-related problems
 };
 
 #endif /* DA_TP_CLASSES_VERTEX_EDGE */

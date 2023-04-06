@@ -73,16 +73,16 @@ bool Graph::addVertex(const int &id) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(const int &sourc, const int &dest, double w, int c) {
+bool Graph::addEdge(const int &sourc, const int &dest, int w, int c) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
         return false;
-    v1->addEdge(v2, w, c);
+    auto e1 = v1->addEdge(v2, w, c);
     return true;
 }
 
-bool Graph::addBidirectionalEdge(const int &sourc, const int &dest, double w, int c) {
+bool Graph::addBidirectionalEdge(const int &sourc, const int &dest, int w, int c) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
@@ -103,14 +103,15 @@ void deleteMatrix(int **m, int n) {
     }
 }
 
-void deleteMatrix(double **m, int n) {
-    if (m != nullptr) {
-        for (int i = 0; i < n; i++)
-            if (m[i] != nullptr)
-                delete[] m[i];
-        delete[] m;
-    }
-}
+//void Graph::print(){
+//    for (auto v : this->vertexSet) {
+//        for(auto e : v->getAdj()){
+//            if (e->getFlow()!=0){
+//                std::cout << e->getOrig() << e->getDest()  << e->getFlow() << std::endl;
+//            }
+//        }
+//    }
+//}
 
 Graph::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());

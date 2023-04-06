@@ -34,9 +34,9 @@ public:
      * destination vertices and the edge weight (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(const int &sourc, const int &dest, double w, int c);
+    bool addEdge(const int &sourc, const int &dest, int w, int c);
 
-    bool addBidirectionalEdge(const int &sourc, const int &dest, double w, int c);
+    bool addBidirectionalEdge(const int &sourc, const int &dest, int w, int c);
 
     int getNumVertex() const;
 
@@ -52,6 +52,12 @@ public:
 
     int maxFlowStations(int source, int target);
 
+    int dijkstra(Vertex* src, Vertex* dest);
+
+    std::pair<int, int> maxTrainMinCost(int source, int target);
+
+    //void print();
+
     bool empty();
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
@@ -60,7 +66,7 @@ protected:
     std::unordered_map<int, Station> stationHash;
     std::unordered_map<std::string, int> inverseHash;
 
-    double **distMatrix = nullptr;   // dist matrix for Floyd-Warshall
+    int **distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
 
     /*
@@ -73,6 +79,6 @@ protected:
 
 void deleteMatrix(int **m, int n);
 
-void deleteMatrix(double **m, int n);
+void deleteMatrix(int **m, int n);
 
 #endif /* DA_TP_CLASSES_GRAPH */
