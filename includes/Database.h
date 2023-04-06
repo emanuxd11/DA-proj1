@@ -6,6 +6,7 @@
 #define PROJETO1_DATABASE_H
 
 #include <unordered_map>
+#include <unordered_set>
 #include <fstream>
 #include <sstream>
 #include "Station.h"
@@ -13,6 +14,7 @@
 #include <regex>
 
 class Database {
+    static std::unordered_set<std::string> districts;
 public:
     static std::unordered_map<int, Station> loadStations();
 
@@ -20,6 +22,7 @@ public:
 
     static std::unordered_map<std::string, int> stationsByName(std::unordered_map<int, Station> stationHash);
 
+    static std::unordered_set<std::string> getDistricts();
 
 private:
     //

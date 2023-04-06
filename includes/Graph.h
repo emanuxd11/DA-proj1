@@ -29,6 +29,7 @@ public:
      */
     bool addVertex(const int &id);
 
+    bool deleteVertex(const int &id);
     /*
      * Adds an edge to a graph (this), given the contents of the source and
      * destination vertices and the edge weight (w).

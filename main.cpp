@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unordered_map>
+#include <map>
 #include "includes/Graph.h"
 #include "includes/VertexEdge.h"
 #include "includes/Database.h"
@@ -123,10 +124,60 @@ solution3 largestCapPair(Graph network) {
     return res;
 }
 
+unsigned transportationNeed(Graph &network, string const &district){
+    int superSourceId = -1;
+    int superSinkId = network.getNumVertex();
+
+    vector<int> in;
+    vector<int> out;
+
+    network.addVertex(superSourceId);
+    network.addVertex(superSinkId);
+
+    std::unordered_map<int, Station> stations = network.getStationHash();
+
+    for (auto v : network.getVertexSet()) {
+        if(v->getId() == superSourceId || v->getId() == superSinkId) continue;
+        if (stations[v->getId()].getDistrict() == district){
+            network.addEdge(superSourceId, v->getId(), INF, 0);
+        }else{
+            network.addEdge(v->getId(), superSinkId, INF, 0);
+        }
+    }
+
+    int maxFlow = network.maxFlowStations(superSourceId, superSinkId);
+
+    for (int id : in) {
+        network.findVertex(superSourceId)->removeEdge(id);
+    }
+
+    for (int id : out) {
+        network.findVertex(id)->removeEdge(superSinkId);
+    }
+
+    network.deleteVertex(superSourceId);
+    network.deleteVertex(superSinkId);
+
+    return maxFlow;
+}
+
+
 // opção 4
-vector<string> topKMunDistr(Graph network) {
+vector<string> topKMunDistr(Graph &network, unsigned k) {
+    vector<pair<string,int>> results;
+    unordered_set<string> districts = Database::getDistricts();
+
+    for(const string &district: districts){
+        results.push_back(make_pair(district, transportationNeed(network, district)));
+        }
+
+    sort(results.begin(), results.end(), [](const pair<string,int> &a, const pair<string,int> &b){
+        return a.second > b.second;
+    });
+
     return vector<string>();
 }
+
 
 // opção 5
 int maxSimTrainStation(Graph network, string const &station_name) {
@@ -388,7 +439,7 @@ int main() {
             int k;
             cout << "Insert k: ";
             cin >> k;
-            auto output = topKMunDistr(g);
+            auto output = topKMunDistr(g,k);
             cout << "do something with the output" << endl;
         } else if (opt == 5) {
             if (g.empty()) g = initGraph();
