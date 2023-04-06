@@ -13,6 +13,7 @@
 #include <regex>
 
 class Database {
+    std::unordered_set<std::string> districts; 
 public:
     static std::unordered_map<int, Station> loadStations();
 
@@ -20,6 +21,7 @@ public:
 
     static std::unordered_map<std::string, int> stationsByName(std::unordered_map<int, Station> stationHash);
 
+    static std::unordered_set<std::string> getDistricts();
 
 private:
     //

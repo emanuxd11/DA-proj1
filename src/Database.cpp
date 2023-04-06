@@ -83,6 +83,8 @@ std::unordered_map<int, Station> Database::loadStations() {
             station.setTownship(fields[3]);
             station.setLine(fields[4]);
 
+            districts.insert(fields[1]);
+            
             stationHash[count] = station;
             count++;
         }
@@ -128,4 +130,9 @@ Graph Database::loadGraph() {
     g.setInvertedHash(inverseStations);
 
     return g;
+}
+
+
+std::unordered_set<std::string> Database::getDistricts(){
+    return districts;
 }
