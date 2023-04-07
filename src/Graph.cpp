@@ -68,6 +68,16 @@ bool Graph::addVertex(const int &id) {
     return true;
 }
 
+bool Graph::deleteVertex(const int &id){
+    for (auto it = vertexSet.begin(); it != vertexSet.end(); ++it) {
+        if ((*it)->getId() == id) {
+            vertexSet.erase(it);
+            return true;
+        }
+    }
+    return false;
+}
+
 /*
  * Adds an edge to a graph (this), given the contents of the source and
  * destination vertices and the edge weight (w).
@@ -103,6 +113,22 @@ void deleteMatrix(int **m, int n) {
     }
 }
 
+std::unordered_set<std::string> Graph::getDistricts() {
+    return districts;
+}
+
+std::unordered_set<std::string> Graph::getMunicipalities() {
+    return municipalities;
+}
+
+void Graph::setDistricts(std::unordered_set<std::string> districts) {
+    this->districts = districts;
+}
+
+void Graph::setMunicipalities(std::unordered_set<std::string> municipalities) {
+    this->municipalities = municipalities;
+}
+
 //void Graph::print(){
 //    for (auto v : this->vertexSet) {
 //        for(auto e : v->getAdj()){
@@ -117,3 +143,5 @@ Graph::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());
     deleteMatrix(pathMatrix, vertexSet.size());
 }
+
+

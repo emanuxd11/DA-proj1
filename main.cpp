@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unordered_map>
+#include <map>
 #include "includes/Graph.h"
 #include "includes/VertexEdge.h"
 #include "includes/Database.h"
@@ -9,33 +10,34 @@ using namespace std;
 
 // opção 1
 Graph initGraph() {
+    Database db;
     return Database::loadGraph();
 }
 
 // opção 2
 bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
-    for(auto v : vertexSet) {
+    for (auto v: vertexSet) {
         v->setVisited(false);
     }
     s->setVisited(true);
     std::queue<Vertex *> q;
     q.push(s);
-    while(!q.empty() && ! t->isVisited()) {
+    while (!q.empty() && !t->isVisited()) {
         auto v = q.front();
         q.pop();
-        for(auto e: v->getAdj()) {
+        for (auto e: v->getAdj()) {
             auto w = e->getDest();
             int residual = e->getWeight() - e->getFlow();
-            if (! w->isVisited() && residual > 0) {
+            if (!w->isVisited() && residual > 0) {
                 w->setVisited(true);
                 w->setPath(e);
                 q.push(w);
             }
         }
-        for(auto e: v->getIncoming()) {
+        for (auto e: v->getIncoming()) {
             auto w = e->getOrig();
             int residual = e->getFlow();
-            if (! w->isVisited() && residual > 0) {
+            if (!w->isVisited() && residual > 0) {
                 w->setVisited(true);
                 w->setPath(e);
                 q.push(w);
@@ -46,16 +48,16 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
 }
 
 int Graph::maxFlowStations(int source, int target) {
-    int res;
-    Vertex* s = findVertex(source);
-    Vertex* t = findVertex(target);
+    int res = 0.0;
+    Vertex *s = findVertex(source);
+    Vertex *t = findVertex(target);
 
     if (s == nullptr || t == nullptr || s == t) {
         throw std::logic_error("Invalid source and/or target vertex");
     }
 
     // Reset the flows
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         for (auto e: v->getAdj()) {
             e->setFlow(0);
         }
@@ -64,25 +66,23 @@ int Graph::maxFlowStations(int source, int target) {
     // Loop to find augmentation paths
     while (findAugmentingPath(s, t)) {
         int f = UINT8_MAX;
-        for (auto v = t; v != s; ) {
+        for (auto v = t; v != s;) {
             auto e = v->getPath();
             if (e->getDest() == v) {
                 f = std::min(f, e->getWeight() - e->getFlow());
                 v = e->getOrig();
-            }
-            else {
+            } else {
                 f = std::min(f, e->getFlow());
                 v = e->getDest();
             }
         }
-        for (auto v = t; v != s; ) {
+        for (auto v = t; v != s;) {
             auto e = v->getPath();
             int flow = e->getFlow();
             if (e->getDest() == v) {
                 e->setFlow(flow + f);
                 v = e->getOrig();
-            }
-            else {
+            } else {
                 e->setFlow(flow - f);
                 v = e->getDest();
             }
@@ -111,10 +111,10 @@ solution3 largestCapPair(Graph network) {
 
             int flow = network.maxFlowStations(i, j);
             if (flow == res.maxFlow) {
-                res.station_pairs.push_back({ stations[i], stations[j] });
+                res.station_pairs.push_back({stations[i], stations[j]});
             } else if (flow > res.maxFlow) {
                 res.station_pairs.erase(res.station_pairs.begin(), res.station_pairs.end());
-                res.station_pairs.push_back({ stations[i], stations[j] });
+                res.station_pairs.push_back({stations[i], stations[j]});
                 res.maxFlow = flow;
             }
         }
@@ -123,10 +123,68 @@ solution3 largestCapPair(Graph network) {
     return res;
 }
 
+unsigned transportationNeed(Graph &network, string const &district) {
+    int superSourceId = -1;
+    int superSinkId = network.getNumVertex();
+
+    vector<int> in;
+    vector<int> out;
+
+    network.addVertex(superSourceId);
+    network.addVertex(superSinkId);
+
+    std::unordered_map<int, Station> stations = network.getStationHash();
+
+    for (auto v: network.getVertexSet()) {
+        if (v->getId() == superSourceId || v->getId() == superSinkId) continue;
+
+        if (stations[v->getId()].getDistrict() == district) {
+            network.addEdge(v->getId(), superSinkId, INF, 0);
+            out.push_back(v->getId());
+        } else if (v->getAdj().size() == 1) {
+            network.addEdge(superSourceId, v->getId(), INF, 0);
+            in.push_back(v->getId());
+        }
+    }
+
+    int maxFlow = network.maxFlowStations(superSourceId, superSinkId);
+
+    for (int id: in) {
+        network.findVertex(superSourceId)->removeEdge(id);
+    }
+
+    for (int id: out) {
+        network.findVertex(id)->removeEdge(superSinkId);
+    }
+
+    network.deleteVertex(superSourceId);
+    network.deleteVertex(superSinkId);
+
+    return maxFlow;
+}
+
+
 // opção 4
-vector<string> topKMunDistr(Graph network) {
+vector<string> topKMunDistr(Graph &network, unsigned k) {
+    vector<pair<string, int>> results;
+    unordered_set<string> districts = network.getDistricts();
+
+    for (const string &district: districts) {
+        results.push_back(make_pair(district, transportationNeed(network, district)));
+    }
+
+    sort(results.begin(), results.end(), [](const pair<string, int> &a, const pair<string, int> &b) {
+        return a.second > b.second;
+    });
+
+    // só p ver o resultado
+    for (const auto& result : results) {
+        cout << result.first << " -> " << result.second << endl;
+    }
+
     return vector<string>();
 }
+
 
 // opção 5
 int maxSimTrainStation(Graph network, string const &station_name) {
@@ -134,7 +192,7 @@ int maxSimTrainStation(Graph network, string const &station_name) {
     vector<int> ids;
     network.addVertex(super_source_ID);
 
-    for (auto v : network.getVertexSet()) {
+    for (auto v: network.getVertexSet()) {
         if (v->getAdj().size() == 1) {
             network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCusto());
             ids.push_back(v->getId());
@@ -148,7 +206,7 @@ int maxSimTrainStation(Graph network, string const &station_name) {
     }
 
     int maxFlow = network.maxFlowStations(super_source_ID, network.getInvertedHash()[station_name]);
-    for (int id : ids) {
+    for (int id: ids) {
         network.findVertex(super_source_ID)->removeEdge(id);
     }
 
@@ -159,7 +217,7 @@ int maxSimTrainStation(Graph network, string const &station_name) {
  * This function compares two vertices and sorts them.
  */
 struct CompareVertex {
-    bool operator()(Vertex* v1, Vertex* v2) {
+    bool operator()(Vertex *v1, Vertex *v2) {
         return v1->getDist() > v2->getDist();
     }
 };
@@ -175,29 +233,29 @@ struct CompareVertex {
  * @param dest Vertex, destination node
  * @return dist[dest], represents the distance of the source vertex src to the destination vertex dest
  */
-int Graph::dijkstra(Vertex* src, Vertex* dest) {
+int Graph::dijkstra(Vertex *src, Vertex *dest) {
 
     // Step 1: Initialize distances from src to all other
     // vertices as UINT8_MAX INITE
-    for(auto v : vertexSet) {
+    for (auto v: vertexSet) {
         v->setDist(UINT8_MAX);
         v->setPath(nullptr);
     }
     src->setDist(0);
 
 
-    priority_queue<Vertex*, vector<Vertex*>, CompareVertex> priorityQueue;
+    priority_queue<Vertex *, vector<Vertex *>, CompareVertex> priorityQueue;
     priorityQueue.push(src);
 
-    while(!priorityQueue.empty()){
-        Vertex* current = priorityQueue.top();
+    while (!priorityQueue.empty()) {
+        Vertex *current = priorityQueue.top();
         priorityQueue.pop();
 
-        for(auto& e : current->getAdj()){
-            if(e->getFlow() < e->getWeight()){
-                Vertex* neighbor = e->getDest();
+        for (auto &e: current->getAdj()) {
+            if (e->getFlow() < e->getWeight()) {
+                Vertex *neighbor = e->getDest();
                 int new_dist = current->getDist() + e->getWeight();
-                if(new_dist < neighbor->getDist()){
+                if (new_dist < neighbor->getDist()) {
                     neighbor->setDist(new_dist);
                     priorityQueue.push(neighbor);
                     neighbor->setPath(e);
@@ -207,7 +265,6 @@ int Graph::dijkstra(Vertex* src, Vertex* dest) {
     }
 
     return dest->getDist();
-
 }
 
 /**
@@ -219,14 +276,13 @@ int Graph::dijkstra(Vertex* src, Vertex* dest) {
  */
 int findMinResidualAlongPath(Vertex *s, Vertex *t) {
     int f = UINT8_MAX;
-    for (auto v = t; v != s; ) {
+    for (auto v = t; v != s;) {
         auto e = v->getPath();
         //cout << v->getId() << " " <<  g->getStationHash()[v->getId()].getName() << " " << e->getWeight() << " " << e->getCusto() << endl;
         if (e->getDest() == v) {
             f = std::min(f, e->getWeight() - e->getFlow());
             v = e->getOrig();
-        }
-        else {
+        } else {
             f = std::min(f, e->getFlow());
             v = e->getDest();
         }
@@ -242,14 +298,13 @@ int findMinResidualAlongPath(Vertex *s, Vertex *t) {
  * @param f int, represents the flow to be augmented
  */
 void augmentFlowAlongPath(Vertex *s, Vertex *t, int f) {
-    for (auto& v = t; v != s; ) {
-        auto* e = v->getPath();
+    for (auto &v = t; v != s;) {
+        auto *e = v->getPath();
         int flow = e->getFlow();
         if (e->getDest() == v) {
             e->setFlow(flow + f);
             v = e->getOrig();
-        }
-        else {
+        } else {
             //printf("oldssadsadsadsa");
             e->setFlow(flow - f);
             v = e->getDest();
@@ -268,21 +323,21 @@ void augmentFlowAlongPath(Vertex *s, Vertex *t, int f) {
  * @param target integer, represents the sink node
  * @return pair<int,int> cost_flow. The first item of the pair represents the minimum cost, and the second item represents the max flow.
  */
-pair <int, int> Graph::maxTrainMinCost(int source, int target) {
-    Vertex* s = findVertex(source);
-    Vertex* t = findVertex(target);
+pair<int, int> Graph::maxTrainMinCost(int source, int target) {
+    Vertex *s = findVertex(source);
+    Vertex *t = findVertex(target);
     if (s == nullptr || t == nullptr || s == t)
         throw "Invalid source and/or target vertex";
 
     // Reset the flows
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         for (auto e: v->getAdj()) {
             e->setFlow(0);
         }
     }
     // Loop to find augmentation paths
     //std::cout << "inicio" << std::endl;
-    while(dijkstra(s, t) != UINT8_MAX) {
+    while (dijkstra(s, t) != UINT8_MAX) {
         //std::cout << "olaaa" << std::endl;
 
         int f = findMinResidualAlongPath(s, t);
@@ -295,26 +350,24 @@ pair <int, int> Graph::maxTrainMinCost(int source, int target) {
     //int cost = calcularCusto();
     int cost = 0, maxFlow = 0;
 
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         for (auto e: v->getAdj()) {
-            if(e->getFlow() > 0){
-                cost += e->getFlow()*e->getCusto();
+            if (e->getFlow() > 0) {
+                cost += e->getFlow() * e->getCusto();
             }
-            if(e->getDest() == t){
+            if (e->getDest() == t) {
                 maxFlow += e->getFlow();
             }
         }
     }
 
 
-
-    pair <int, int> cost_flow;
+    pair<int, int> cost_flow;
     cost_flow.first = cost;
     cost_flow.second = maxFlow;
 
     return cost_flow;
 }
-
 
 
 // opção 7
@@ -336,7 +389,7 @@ void displayMenu() {
     };
 
     cout << " <-----------------> Menu <-----------------> " << endl;
-    for (string const &option : options) {
+    for (string const &option: options) {
         cout << option << endl;
     }
     cout << "Insert option: ";
@@ -378,8 +431,9 @@ int main() {
 
             cout << "Please wait, this may take a few minutes..." << endl;
             solution3 result = largestCapPair(g);
-            cout << "These stations require the most amount of trains when working at full capacity (" << result.maxFlow << " trains)" << endl;
-            for (auto station_pair : result.station_pairs) {
+            cout << "These stations require the most amount of trains when working at full capacity (" << result.maxFlow
+                 << " trains)" << endl;
+            for (auto station_pair: result.station_pairs) {
                 cout << station_pair.front().getName() << " -> " << station_pair.back().getName() << endl;
             }
 
@@ -388,7 +442,7 @@ int main() {
             int k;
             cout << "Insert k: ";
             cin >> k;
-            auto output = topKMunDistr(g);
+            auto output = topKMunDistr(g, k);
             cout << "do something with the output" << endl;
         } else if (opt == 5) {
             if (g.empty()) g = initGraph();

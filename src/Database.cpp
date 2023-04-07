@@ -54,7 +54,7 @@ double calculateLineCapacity(std::string const &capacity) {
 
 std::unordered_map<std::string, int> Database::stationsByName(std::unordered_map<int, Station> stationHash) {
     std::unordered_map<std::string, int> inverse;
-    for (auto &it : stationHash) {
+    for (auto &it: stationHash) {
 //        if(it.second.getName() == "Póvoa"){
 //            std::cout << "Póboaaaa: " << it.first << std::endl;
 //        }
@@ -64,7 +64,10 @@ std::unordered_map<std::string, int> Database::stationsByName(std::unordered_map
     return inverse;
 }
 
-std::unordered_map<int, Station> Database::loadStations() {
+std::unordered_map<int, Station> Database::loadStations(
+        std::unordered_set<std::string> &districts,
+        std::unordered_set<std::string> &municipalities) {
+
     std::unordered_map<int, Station> stationHash;
     std::ifstream stations("../docs/stations.csv");
 
@@ -83,6 +86,13 @@ std::unordered_map<int, Station> Database::loadStations() {
             station.setTownship(fields[3]);
             station.setLine(fields[4]);
 
+            if (!fields[1].empty()) {
+                districts.insert(fields[1]);
+            }
+            if (!fields[2].empty()) {
+                municipalities.insert(fields[2]);
+            }
+
             stationHash[count] = station;
             count++;
         }
@@ -98,7 +108,10 @@ Graph Database::loadGraph() {
     }
 
     Graph g;
-    std::unordered_map<int, Station> stationHash = loadStations();
+    std::unordered_set<std::string> districts, municipalities;
+    std::unordered_map<int, Station> stationHash = loadStations(districts, municipalities);
+    g.setDistricts(districts);
+    g.setMunicipalities(municipalities);
     std::unordered_map<std::string, int> inverseStations = stationsByName(stationHash);
 
     std::string line, origStation, destStation;
@@ -120,8 +133,8 @@ Graph Database::loadGraph() {
 
         g.addVertex(origId);
         g.addVertex(destId);
-        g.addBidirectionalEdge(origId, destId, (capacity/2), custo);
-//        g.addEdge(origId, destId, capacity, custo);
+        g.addBidirectionalEdge(origId, destId, (capacity / 2), custo);
+        // g.addEdge(origId, destId, capacity, custo);
     }
 
     g.setStationHash(stationHash);
