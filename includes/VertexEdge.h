@@ -81,9 +81,9 @@ public:
 
     Vertex *getDest() const;
 
-    int getWeight() const;
+    int getCapacity() const;
 
-    int getCusto() const;
+    int getCost() const;
 
     bool isSelected() const;
 
@@ -99,15 +99,15 @@ public:
 
     void setFlow(int flow);
 
-    void setCusto(int c);
+    void setCost(int c);
 
     bool isAlfaService() const;
 
     bool isStandardService() const;
 protected:
     Vertex *dest; // destination vertex
-    int weight; // edge weight, can also be used for capacity
-    int custo;
+    int capacity; // edge capacity, can also be used for capacity
+    int cost;
 
     // auxiliary fields
     bool selected = false;

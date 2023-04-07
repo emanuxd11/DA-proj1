@@ -8,7 +8,7 @@ Vertex::Vertex(int id) : id(id) {}
 
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
- * with a given destination vertex (d) and edge weight (w).
+ * with a given destination vertex (d) and edge capacity (w).
  */
 Edge *Vertex::addEdge(Vertex *d, int w, int c) {
     auto newEdge = new Edge(this, d, w, c);
@@ -111,18 +111,18 @@ void Vertex::setPath(Edge *path) {
 
 /********************** Edge  ****************************/
 
-Edge::Edge(Vertex *orig, Vertex *dest, int w, int c) : orig(orig), dest(dest), weight(w), custo(c) {}
+Edge::Edge(Vertex *orig, Vertex *dest, int w, int c) : orig(orig), dest(dest), capacity(w), cost(c) {}
 
 Vertex *Edge::getDest() const {
     return this->dest;
 }
 
-int Edge::getWeight() const {
-    return this->weight;
+int Edge::getCapacity() const {
+    return this->capacity;
 }
 
-int Edge::getCusto() const{
-    return this->custo;
+int Edge::getCost() const{
+    return this->cost;
 }
 
 Vertex *Edge::getOrig() const {
@@ -153,14 +153,14 @@ void Edge::setFlow(int flow) {
     this->flow = flow;
 }
 
-void Edge::setCusto(int c){
-    this->custo = c;
+void Edge::setCost(int c){
+    this->cost = c;
 }
 
 bool Edge::isStandardService() const {
-    return custo == 2;
+    return cost == 2;
 }
 
 bool Edge::isAlfaService() const {
-    return custo == 4;
+    return cost == 4;
 }

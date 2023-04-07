@@ -43,9 +43,9 @@ int calculateTrainCost(std::string const &train_type) {
         return 4;
 }
 
-double calculateLineCapacity(std::string const &capacity) {
+int calculateLineCapacity(std::string const &capacity) {
     try {
-        return std::stod(capacity);
+        return std::stoi(capacity);
     } catch (std::invalid_argument) {
         return -1.0;
     }
@@ -115,8 +115,7 @@ Graph Database::loadGraph() {
     std::unordered_map<std::string, int> inverseStations = stationsByName(stationHash);
 
     std::string line, origStation, destStation;
-    int origId, destId, custo;
-    double capacity;
+    int origId, destId, custo, capacity;
 
     getline(network, line); // throwaway first line read
     while (getline(network, line)) {
@@ -133,8 +132,8 @@ Graph Database::loadGraph() {
 
         g.addVertex(origId);
         g.addVertex(destId);
-        g.addBidirectionalEdge(origId, destId, (capacity / 2), custo);
-        // g.addEdge(origId, destId, capacity, custo);
+        // g.addBidirectionalEdge(origId, destId, (capacity / 2), cost); Porque é que isto estava a dividir por 2 lol? Assim dá tudo metade
+        g.addBidirectionalEdge(origId, destId, capacity, custo);
     }
 
     g.setStationHash(stationHash);

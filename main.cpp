@@ -27,7 +27,7 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
         q.pop();
         for (auto e: v->getAdj()) {
             auto w = e->getDest();
-            int residual = e->getWeight() - e->getFlow();
+            int residual = e->getCapacity() - e->getFlow();
             if (!w->isVisited() && residual > 0) {
                 w->setVisited(true);
                 w->setPath(e);
@@ -69,7 +69,7 @@ int Graph::maxFlowStations(int source, int target) {
         for (auto v = t; v != s;) {
             auto e = v->getPath();
             if (e->getDest() == v) {
-                f = std::min(f, e->getWeight() - e->getFlow());
+                f = std::min(f, e->getCapacity() - e->getFlow());
                 v = e->getOrig();
             } else {
                 f = std::min(f, e->getFlow());
@@ -165,24 +165,25 @@ unsigned transportationNeed(Graph &network, string const &district) {
 
 
 // opção 4
-vector<string> topKMunDistr(Graph &network, unsigned k) {
-    vector<pair<string, int>> results;
+void topKMunDistr(Graph &network, unsigned k) {
+    vector<pair<string, int>> district_res;
+    vector<pair<string, int>> municip_res;
+
     unordered_set<string> districts = network.getDistricts();
+    unordered_set<string> municipalities = network.getMunicipalities();
 
     for (const string &district: districts) {
-        results.push_back(make_pair(district, transportationNeed(network, district)));
+        district_res.emplace_back(district, transportationNeed(network, district));
     }
 
-    sort(results.begin(), results.end(), [](const pair<string, int> &a, const pair<string, int> &b) {
+    sort(district_res.begin(), district_res.end(), [](const pair<string, int> &a, const pair<string, int> &b) {
         return a.second > b.second;
     });
 
-    // só p ver o resultado
-    for (const auto& result : results) {
-        cout << result.first << " -> " << result.second << endl;
+    cout << "The top " << k << " districts are:" << endl;
+    for (auto it = district_res.begin(); it != district_res.begin() + k && it != district_res.end(); ++it) {
+        cout << it->first << " -> " << it->second << endl;
     }
-
-    return vector<string>();
 }
 
 
@@ -194,12 +195,12 @@ int maxSimTrainStation(Graph network, string const &station_name) {
 
     for (auto v: network.getVertexSet()) {
         if (v->getAdj().size() == 1) {
-            network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCusto());
+            network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCost());
             ids.push_back(v->getId());
         } else if (v->getAdj().size() == 2) {
-            if (v->getAdj()[0]->getCusto() != v->getAdj()[1]->getCusto()) {
-                network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCusto());
-                network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[1]->getCusto());
+            if (v->getAdj()[0]->getCost() != v->getAdj()[1]->getCost()) {
+                network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCost());
+                network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[1]->getCost());
                 ids.push_back(v->getId());
             }
         }
@@ -224,7 +225,7 @@ struct CompareVertex {
 
 // The main function that finds shortest distances from src
 // to all other vertices using Bellman-Ford algorithm.  The
-// function also detects negative weight cycle
+// function also detects negative capacity cycle
 /**
  * This algorithm finds the shortest path from a vertex which is the source node to all other vertices in a weighted graph
  * with non-negative edge weights.
@@ -252,9 +253,9 @@ int Graph::dijkstra(Vertex *src, Vertex *dest) {
         priorityQueue.pop();
 
         for (auto &e: current->getAdj()) {
-            if (e->getFlow() < e->getWeight()) {
+            if (e->getFlow() < e->getCapacity()) {
                 Vertex *neighbor = e->getDest();
-                int new_dist = current->getDist() + e->getWeight();
+                int new_dist = current->getDist() + e->getCapacity();
                 if (new_dist < neighbor->getDist()) {
                     neighbor->setDist(new_dist);
                     priorityQueue.push(neighbor);
@@ -278,9 +279,9 @@ int findMinResidualAlongPath(Vertex *s, Vertex *t) {
     int f = UINT8_MAX;
     for (auto v = t; v != s;) {
         auto e = v->getPath();
-        //cout << v->getId() << " " <<  g->getStationHash()[v->getId()].getName() << " " << e->getWeight() << " " << e->getCusto() << endl;
+        //cout << v->getId() << " " <<  g->getStationHash()[v->getId()].getName() << " " << e->getCapacity() << " " << e->getCost() << endl;
         if (e->getDest() == v) {
-            f = std::min(f, e->getWeight() - e->getFlow());
+            f = std::min(f, e->getCapacity() - e->getFlow());
             v = e->getOrig();
         } else {
             f = std::min(f, e->getFlow());
@@ -353,7 +354,7 @@ pair<int, int> Graph::maxTrainMinCost(int source, int target) {
     for (auto v: vertexSet) {
         for (auto e: v->getAdj()) {
             if (e->getFlow() > 0) {
-                cost += e->getFlow() * e->getCusto();
+                cost += e->getFlow() * e->getCost();
             }
             if (e->getDest() == t) {
                 maxFlow += e->getFlow();
@@ -422,17 +423,15 @@ int main() {
             int origId = g.getInvertedHash()[orig];
             int destId = g.getInvertedHash()[dest];
 
-            cout << "origin: " << origId << endl;
-            cout << "destiny: " << destId << endl;
-
-            cout << "result: " << g.maxFlowStations(origId, destId) << endl;
+            cout << g.maxFlowStations(origId, destId) << " trains can simultaneously travel between "
+                 << orig << " and " << dest << endl;
         } else if (opt == 3) {
             if (g.empty()) g = initGraph();
 
             cout << "Please wait, this may take a few minutes..." << endl;
             solution3 result = largestCapPair(g);
             cout << "These stations require the most amount of trains when working at full capacity (" << result.maxFlow
-                 << " trains)" << endl;
+                 << " trains):" << endl;
             for (auto station_pair: result.station_pairs) {
                 cout << station_pair.front().getName() << " -> " << station_pair.back().getName() << endl;
             }
@@ -442,8 +441,7 @@ int main() {
             int k;
             cout << "Insert k: ";
             cin >> k;
-            auto output = topKMunDistr(g, k);
-            cout << "do something with the output" << endl;
+            topKMunDistr(g, k);
         } else if (opt == 5) {
             if (g.empty()) g = initGraph();
             string station_name;
@@ -459,15 +457,15 @@ int main() {
             cout << "Insert destiny station: ";
             dest = getInput();
 
-            cout << "origin " << orig << endl;
-            cout << "dest " << dest << endl;
+            // cout << "origin " << orig << endl;
+            // cout << "dest " << dest << endl;
 
             int origId = g.getInvertedHash()[orig];
             int destId = g.getInvertedHash()[dest];
 
-            cout << "origin: " << origId << endl;
-            cout << "destiny: " << destId << endl;
-            //cout << "aaaaa: " << g.getStationHash().find(destId)->second.getName() <<endl;
+            // cout << "origin: " << origId << endl;
+            // cout << "destiny: " << destId << endl;
+            // cout << "aaaaa: " << g.getStationHash().find(destId)->second.getName() <<endl;
 
             pair<int, int> cost_flow = g.maxTrainMinCost(origId, destId);
             cout << "Numero de comboios em simultaneo (maxFlow): " << cost_flow.second << endl;

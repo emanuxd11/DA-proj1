@@ -33,12 +33,12 @@ public:
     bool deleteVertex(const int &id);
     /*
      * Adds an edge to a graph (this), given the contents of the source and
-     * destination vertices and the edge weight (w).
+     * destination vertices and the edge capacity (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(const int &sourc, const int &dest, int w, int c);
+    bool addEdge(const int &sourc, const int &dest, int cap, int cost);
 
-    bool addBidirectionalEdge(const int &sourc, const int &dest, int w, int c);
+    bool addBidirectionalEdge(const int &sourc, const int &dest, int cap, int cost);
 
     int getNumVertex() const;
 
