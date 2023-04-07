@@ -373,6 +373,61 @@ int maxTrain(Graph reduced_network, string const &orig, string const &dest) {
     return 0;
 }
 
+//opcao 8
+
+void Graph::topkSegmentFailureAux(Graph g){
+    for (auto v : vertexSet) {
+        if(v->getIndegree() == -1){
+            string stationName = g.getStationHash().at(v->getId()).getName();
+            v->setIndegree(maxSimTrainStation(g, stationName));
+        }
+    }
+}
+
+void Graph::topkSegmentFailureDisable(Graph g){
+    for (auto v : vertexSet) {
+        string stationName = g.getStationHash().at(v->getId()).getName();
+        v->setIndegreeUnavailable((maxSimTrainStation(g, stationName)));
+    }
+}
+
+void Graph::disableEdge(Vertex *s, Vertex *t){
+    for (auto v : vertexSet) {
+        if(v==s){
+            for (auto e: v->getAdj()) {
+                if(e->getDest() == t){
+                    e->setAvailable(false);
+                }
+            }
+        }
+    }
+
+}
+
+
+bool sortDisabledEdges(Vertex* v1, Vertex* v2){
+    double affected1 = v1->getIndegreeUnavailable()/v1->getIndegree() * 100;
+    double affected2 = v2->getIndegreeUnavailable()/v2->getIndegree() * 100;
+
+    if(affected1 == affected2){
+        return v1->getIndegreeUnavailable() > v2->getIndegreeUnavailable();
+    }
+    else{
+        return affected1 > affected2;
+    }
+}
+
+int topkSegmentFailure(Graph g){
+    g.topkSegmentFailureAux(g);
+
+//    disableEdge(src, sink);
+    g.topkSegmentFailureDisable(g);
+
+    std::sort(g.getVertexSet().begin(), g.getVertexSet().end(), sortDisabledEdges);
+
+//    show top k impacted vertexes
+}
+
 void displayMenu() {
     static vector<string> options = {
             "1) Process dataset into database",
@@ -383,7 +438,7 @@ void displayMenu() {
             "6) Calculate the maximum amount of trains that can simultaneously travel between two specific stations with minimum cost for the company",
             "7) Calculate the maximum number of trains that can simultaneously travel between two specific stations in a network of reduced connectivity",
             "8) Report the top-k stations most affected by each segment failure",
-            "9) Quit"
+            "0) Quit"
     };
 
     cout << " <-----------------> Menu <-----------------> " << endl;
@@ -482,8 +537,41 @@ int main() {
             cout << "do something with the output" << endl;
         } else if (opt == 8) {
             if (g.empty()) g = initGraph();
-            // ?
-        } else if (opt == 9) {
+            bool flag = true;
+            while(flag) {
+                cout << "Select the unavailable edge by inserting two stations: " << endl;
+                string orig, dest;
+                cout << "Insert origin station: ";
+                orig = getInput();
+                cout << "Insert destiny station: ";
+                dest = getInput();
+
+                cout << "origin " << orig << endl;
+                cout << "dest " << dest << endl;
+
+                int origId = g.getInvertedHash()[orig];
+
+                int destId = g.getInvertedHash()[dest];
+
+                cout << "origin: " << origId << endl;
+                cout << "destiny: " << destId << endl;
+
+                Vertex* s = g.findVertex(origId);
+                Vertex* t = g.findVertex(destId);
+
+                g.disableEdge(s,t);
+
+                cout << "If you want to turn another edge unavailable, insert the number 1: " << endl;
+                int number;
+                cin >> number;
+                if(number != 1){
+                    flag = false;
+                }
+
+            }
+
+
+        } else if (opt == 0) {
             break;
         }
     }

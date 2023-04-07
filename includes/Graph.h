@@ -57,6 +57,12 @@ public:
 
     std::pair<int, int> maxTrainMinCost(int source, int target);
 
+    void topkSegmentFailureAux(Graph g);
+
+    void disableEdge(Vertex* s, Vertex* t);
+
+    void topkSegmentFailureDisable(Graph g);
+
     //void print();
 
     bool empty();
