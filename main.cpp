@@ -10,15 +10,22 @@ using namespace std;
 
 // opção 1
 Graph initGraph() {
-    Database db;
     return Database::loadGraph();
 }
 
 // opção 2
+/**
+ * This algorithm finds augmenting paths between source and sink vertices.
+ * Time complexity: O(|V| + |E|).
+ * @param s Vertex, source node.
+ * @param t Vertex, sink node.
+ * @return t->isVisited(), bool, true if an augmenting path was found, false otherwise.
+ */
 bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
     for (auto v: vertexSet) {
         v->setVisited(false);
     }
+
     s->setVisited(true);
     std::queue<Vertex *> q;
     q.push(s);
@@ -44,17 +51,28 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
             }
         }
     }
+
     return t->isVisited();
 }
 
-int Graph::maxFlowStations(int source, int target) {
-    int res = 0.0;
+/**
+ * This algorithm (Edmonds-Karp) finds the maximum number of trains that can simultaneously travel between
+ * two specific stations, source and sink. The function takes any valid source and destiniation
+ * stations as input but will throw an error in case one or both stations are not found.
+ * Time complexity: O(|E| * (|V| + |E|)).
+ * @param source int, ID of source node.
+ * @param sink int, ID of sink node.
+ * @return res, int, max flow between the two stations/nodes.
+ */
+int Graph::maxFlowStations(int source, int sink) {
     Vertex *s = findVertex(source);
-    Vertex *t = findVertex(target);
+    Vertex *t = findVertex(sink);
 
     if (s == nullptr || t == nullptr || s == t) {
-        throw std::logic_error("Invalid source and/or target vertex");
+        throw std::logic_error("Invalid source and/or sink vertex");
     }
+
+    int res = 0.0;
 
     // Reset the flows
     for (auto v: vertexSet) {
@@ -94,15 +112,21 @@ int Graph::maxFlowStations(int source, int target) {
 }
 
 // opção 3
-struct solution3 {
-    vector<vector<Station>> station_pairs;
-    int maxFlow;
+struct LarCapSolution {
+    vector<pair<Station, Station>> station_pairs;
+    int maxFlow = -1;
 };
 
-solution3 largestCapPair(Graph network) {
-    solution3 res;
-    res.maxFlow = -1;
-    unordered_map<int, Station> stations = network.getStationHash();
+/**
+ * This algorithm finds the pair of stations with the highest max flow by brute forcing
+ * every possible pair of stations.
+ * Time complexity: O(|V|^2 * |E| * (|V| + |E|)).
+ * @param network Graph, railway network represented as a weighted, directed graph.
+ * @return res, LarCapSolution, a data structure containing a vector of pairs of stations.
+ * and an integer containing the max flow between this/these pair(s) of station(s).
+ */
+LarCapSolution largestCapPair(Graph network) {
+    LarCapSolution res;
 
     for (int i = 0; i < network.getVertexSet().size(); i++) {
         if (!network.findVertex(i)) continue;
@@ -111,10 +135,10 @@ solution3 largestCapPair(Graph network) {
 
             int flow = network.maxFlowStations(i, j);
             if (flow == res.maxFlow) {
-                res.station_pairs.push_back({stations[i], stations[j]});
+                res.station_pairs.emplace_back(network.getStation(i), network.getStation(j));
             } else if (flow > res.maxFlow) {
                 res.station_pairs.erase(res.station_pairs.begin(), res.station_pairs.end());
-                res.station_pairs.push_back({stations[i], stations[j]});
+                res.station_pairs.emplace_back(network.getStation(i), network.getStation(j));
                 res.maxFlow = flow;
             }
         }
@@ -133,12 +157,10 @@ unsigned transportationNeed(Graph &network, string const &district) {
     network.addVertex(superSourceId);
     network.addVertex(superSinkId);
 
-    std::unordered_map<int, Station> stations = network.getStationHash();
-
     for (auto v: network.getVertexSet()) {
         if (v->getId() == superSourceId || v->getId() == superSinkId) continue;
 
-        if (stations[v->getId()].getDistrict() == district) {
+        if (network.getStation(v->getId()).getDistrict() == district) {
             network.addEdge(v->getId(), superSinkId, INF, 0);
             out.push_back(v->getId());
         } else if (v->getAdj().size() == 1) {
@@ -188,7 +210,16 @@ void topKMunDistr(Graph &network, unsigned k) {
 
 
 // opção 5
-int maxSimTrainStation(Graph network, string const &station_name) {
+/**
+ * This algorithm finds the maximum number of trains that can simultaneously arrive
+ * at a given station. It works by creating a super source node that connects to all source
+ * stations (the ones with only one edge in their adjacency list) with an infinite capacity,
+ * and then calculating the max flow between the super source and the desired station.
+ * @param network Graph, railway network represented as a weighted, directed graph.
+ * @param name std::string, string of characters containing the station name.
+ * @return max_flow, int, maximum flow between the created super source and sink station (name)
+ */
+int maxSimTrainStation(Graph network, const string &name) {
     int super_source_ID = -1;
     vector<int> ids;
     network.addVertex(super_source_ID);
@@ -206,12 +237,12 @@ int maxSimTrainStation(Graph network, string const &station_name) {
         }
     }
 
-    int maxFlow = network.maxFlowStations(super_source_ID, network.getInvertedHash()[station_name]);
+    int max_flow = network.maxFlowStations(super_source_ID, network.getStation(name));
     for (int id: ids) {
         network.findVertex(super_source_ID)->removeEdge(id);
     }
 
-    return maxFlow;
+    return max_flow;
 }
 
 /**
@@ -328,7 +359,7 @@ pair<int, int> Graph::maxTrainMinCost(int source, int target) {
     Vertex *s = findVertex(source);
     Vertex *t = findVertex(target);
     if (s == nullptr || t == nullptr || s == t)
-        throw "Invalid source and/or target vertex";
+        throw runtime_error("Invalid source and/or target vertex");
 
     // Reset the flows
     for (auto v: vertexSet) {
@@ -415,13 +446,15 @@ int main() {
             g = initGraph();
         } else if (opt == 2) {
             if (g.empty()) g = initGraph();
+
             string orig, dest;
             cout << "Insert name of origin station: ";
             orig = getInput();
             cout << "Insert name of destiny station: ";
             dest = getInput();
-            int origId = g.getInvertedHash()[orig];
-            int destId = g.getInvertedHash()[dest];
+
+            int origId = g.getStation(orig);
+            int destId = g.getStation(dest);
 
             cout << g.maxFlowStations(origId, destId) << " trains can simultaneously travel between "
                  << orig << " and " << dest << endl;
@@ -429,11 +462,11 @@ int main() {
             if (g.empty()) g = initGraph();
 
             cout << "Please wait, this may take a few minutes..." << endl;
-            solution3 result = largestCapPair(g);
+            LarCapSolution result = largestCapPair(g);
             cout << "These stations require the most amount of trains when working at full capacity (" << result.maxFlow
                  << " trains):" << endl;
             for (auto station_pair: result.station_pairs) {
-                cout << station_pair.front().getName() << " -> " << station_pair.back().getName() << endl;
+                cout << station_pair.first.getName() << " -> " << station_pair.second.getName() << endl;
             }
 
         } else if (opt == 4) {
@@ -447,6 +480,11 @@ int main() {
             string station_name;
             cout << "Insert station name: ";
             station_name = getInput();
+
+            if (!g.getStation(station_name)) {
+                // checks if station exists
+            }
+
             int num = maxSimTrainStation(g, station_name);
             cout << num << " trains can arrive at " << station_name << " simultaneously" << endl;
         } else if (opt == 6) {
@@ -460,8 +498,8 @@ int main() {
             // cout << "origin " << orig << endl;
             // cout << "dest " << dest << endl;
 
-            int origId = g.getInvertedHash()[orig];
-            int destId = g.getInvertedHash()[dest];
+            int origId = g.getStation(orig);
+            int destId = g.getStation(dest);
 
             // cout << "origin: " << origId << endl;
             // cout << "destiny: " << destId << endl;
@@ -476,9 +514,10 @@ int main() {
             // removê-las do grafo
             string orig, dest;
             cout << "Insert origin station: ";
-            cin >> orig;
+            // aqui é melhor usar getInput (definida em cima) pq o cin só lê até aos espaços
+            orig = getInput();
             cout << "Insert destiny station: ";
-            cin >> dest;
+            dest = getInput();
             //int num = maxTrainMinCost(g, orig, dest);
             cout << "do something with the output" << endl;
         } else if (opt == 8) {

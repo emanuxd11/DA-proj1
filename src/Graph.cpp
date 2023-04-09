@@ -10,13 +10,13 @@ void Graph::setInvertedHash(std::unordered_map<std::string, int> const &stations
     this->inverseHash = stationsInverse;
 }
 
-std::unordered_map<int, Station> Graph::getStationHash() {
+/* std::unordered_map<int, Station> Graph::getStationHash() {
     return this->stationHash;
 }
 
 std::unordered_map<std::string, int> Graph::getInvertedHash() {
     return inverseHash;
-}
+} */
 
 int Graph::getNumVertex() const {
     return vertexSet.size();
@@ -129,6 +129,24 @@ void Graph::setMunicipalities(std::unordered_set<std::string> municipalities) {
     this->municipalities = municipalities;
 }
 
+int Graph::getStation(const std::string &name) {
+    auto it = inverseHash.find(name);
+    if (it == inverseHash.end()) {
+        throw std::runtime_error("Invalid station name");
+    }
+
+    return it->second;
+}
+
+Station Graph::getStation(int id) {
+    auto it = stationHash.find(id);
+    if (it == stationHash.end()) {
+        throw std::runtime_error("Invalid station id");
+    }
+
+    return it->second;
+}
+
 //void Graph::print(){
 //    for (auto v : this->vertexSet) {
 //        for(auto e : v->getAdj()){
@@ -143,5 +161,4 @@ Graph::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());
     deleteMatrix(pathMatrix, vertexSet.size());
 }
-
 
