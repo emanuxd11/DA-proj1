@@ -43,9 +43,9 @@ int calculateTrainCost(std::string const &train_type) {
         return 4;
 }
 
-double calculateLineCapacity(std::string const &capacity) {
+int calculateLineCapacity(std::string const &capacity) {
     try {
-        return std::stod(capacity);
+        return std::stoi(capacity);
     } catch (std::invalid_argument) {
         return -1.0;
     }
@@ -54,7 +54,7 @@ double calculateLineCapacity(std::string const &capacity) {
 
 std::unordered_map<std::string, int> Database::stationsByName(std::unordered_map<int, Station> stationHash) {
     std::unordered_map<std::string, int> inverse;
-    for (auto &it : stationHash) {
+    for (auto &it: stationHash) {
 //        if(it.second.getName() == "Póvoa"){
 //            std::cout << "Póboaaaa: " << it.first << std::endl;
 //        }
@@ -64,7 +64,10 @@ std::unordered_map<std::string, int> Database::stationsByName(std::unordered_map
     return inverse;
 }
 
-std::unordered_map<int, Station> Database::loadStations() {
+std::unordered_map<int, Station> Database::loadStations(
+        std::unordered_set<std::string> &districts,
+        std::unordered_set<std::string> &municipalities) {
+
     std::unordered_map<int, Station> stationHash;
     std::ifstream stations("../docs/stations.csv");
 
@@ -83,7 +86,12 @@ std::unordered_map<int, Station> Database::loadStations() {
             station.setTownship(fields[3]);
             station.setLine(fields[4]);
 
-            districts.insert(fields[1]);
+            if (!fields[1].empty()) {
+                districts.insert(fields[1]);
+            }
+            if (!fields[2].empty()) {
+                municipalities.insert(fields[2]);
+            }
 
             stationHash[count] = station;
             count++;
@@ -100,12 +108,14 @@ Graph Database::loadGraph() {
     }
 
     Graph g;
-    std::unordered_map<int, Station> stationHash = loadStations();
+    std::unordered_set<std::string> districts, municipalities;
+    std::unordered_map<int, Station> stationHash = loadStations(districts, municipalities);
+    g.setDistricts(districts);
+    g.setMunicipalities(municipalities);
     std::unordered_map<std::string, int> inverseStations = stationsByName(stationHash);
 
     std::string line, origStation, destStation;
-    int origId, destId, custo;
-    double capacity;
+    int origId, destId, custo, capacity;
 
     getline(network, line); // throwaway first line read
     while (getline(network, line)) {
@@ -122,8 +132,8 @@ Graph Database::loadGraph() {
 
         g.addVertex(origId);
         g.addVertex(destId);
-        g.addBidirectionalEdge(origId, destId, (capacity/2), custo);
-//        g.addEdge(origId, destId, capacity, custo);
+        // g.addBidirectionalEdge(origId, destId, (capacity / 2), cost); Porque é que isto estava a dividir por 2 lol? Assim dá tudo metade
+        g.addBidirectionalEdge(origId, destId, capacity, custo);
     }
 
     g.setStationHash(stationHash);
@@ -131,8 +141,3 @@ Graph Database::loadGraph() {
 
     return g;
 }
-
-std::unordered_set<std::string> Database::getDistricts(){
-    return districts;
-}
-

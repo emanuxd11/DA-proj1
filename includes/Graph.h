@@ -11,6 +11,7 @@
 #include "MutablePriorityQueue.h"
 #include "Station.h"
 #include <unordered_map>
+#include <unordered_set>
 
 #include "VertexEdge.h"
 
@@ -32,12 +33,12 @@ public:
     bool deleteVertex(const int &id);
     /*
      * Adds an edge to a graph (this), given the contents of the source and
-     * destination vertices and the edge weight (w).
+     * destination vertices and the edge capacity (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(const int &sourc, const int &dest, int w, int c);
+    bool addEdge(const int &sourc, const int &dest, int cap, int cost);
 
-    bool addBidirectionalEdge(const int &sourc, const int &dest, int w, int c);
+    bool addBidirectionalEdge(const int &sourc, const int &dest, int cap, int cost);
 
     int getNumVertex() const;
 
@@ -63,6 +64,15 @@ public:
 
     void topkSegmentFailureDisable(Graph g);
 
+    void setDistricts(std::unordered_set<std::string> districts);
+
+    void setMunicipalities(std::unordered_set<std::string> municipalities);
+
+    std::unordered_set<std::string> getDistricts();
+
+    std::unordered_set<std::string> getMunicipalities();
+
+
     //void print();
 
     bool empty();
@@ -82,6 +92,10 @@ protected:
     int findVertexIdx(const int &id) const;
 
     bool findAugmentingPath(Vertex *s, Vertex *t);
+
+    std::unordered_set<std::string> districts;
+
+    std::unordered_set<std::string> municipalities;
 };
 
 void deleteMatrix(int **m, int n);

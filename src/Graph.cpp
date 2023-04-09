@@ -80,25 +80,25 @@ bool Graph::deleteVertex(const int &id){
 
 /*
  * Adds an edge to a graph (this), given the contents of the source and
- * destination vertices and the edge weight (w).
+ * destination vertices and the edge capacity (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(const int &sourc, const int &dest, int w, int c) {
+bool Graph::addEdge(const int &sourc, const int &dest, int cap, int cost) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
         return false;
-    auto e1 = v1->addEdge(v2, w, c);
+    auto e1 = v1->addEdge(v2, cap, cost);
     return true;
 }
 
-bool Graph::addBidirectionalEdge(const int &sourc, const int &dest, int w, int c) {
+bool Graph::addBidirectionalEdge(const int &sourc, const int &dest, int cap, int cost) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
         return false;
-    auto e1 = v1->addEdge(v2, w, c);
-    auto e2 = v2->addEdge(v1, w, c);
+    auto e1 = v1->addEdge(v2, cap, cost);
+    auto e2 = v2->addEdge(v1, cap, cost);
     e1->setReverse(e2);
     e2->setReverse(e1);
     return true;
@@ -111,6 +111,22 @@ void deleteMatrix(int **m, int n) {
                 delete[] m[i];
         delete[] m;
     }
+}
+
+std::unordered_set<std::string> Graph::getDistricts() {
+    return districts;
+}
+
+std::unordered_set<std::string> Graph::getMunicipalities() {
+    return municipalities;
+}
+
+void Graph::setDistricts(std::unordered_set<std::string> districts) {
+    this->districts = districts;
+}
+
+void Graph::setMunicipalities(std::unordered_set<std::string> municipalities) {
+    this->municipalities = municipalities;
 }
 
 //void Graph::print(){
@@ -127,3 +143,5 @@ Graph::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());
     deleteMatrix(pathMatrix, vertexSet.size());
 }
+
+
