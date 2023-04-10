@@ -113,8 +113,8 @@ void Vertex::setIndegreeUnavailable(int indegree_unavailable) {
     this->indegree_unavailable = indegree_unavailable;
 }
 
-int Vertex::getIndegreeUnavailable() {
-    return this->indegree_unavailable;
+int Vertex::getIndegreeUnavailable() const {
+    return indegree_unavailable;
 }
 
 /********************** Edge  ****************************/

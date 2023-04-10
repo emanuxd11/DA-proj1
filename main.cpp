@@ -1,12 +1,17 @@
 #include <iostream>
-#include <unordered_map>
-#include <map>
+#include <iomanip>
 #include "includes/Graph.h"
 #include "includes/VertexEdge.h"
 #include "includes/Database.h"
 #include "includes/Station.h"
 
 using namespace std;
+
+string getInput() {
+    string input_string;
+    std::getline(std::cin, input_string);
+    return input_string;
+}
 
 // opção 1
 Graph initGraph() {
@@ -22,7 +27,7 @@ Graph initGraph() {
  * @return t->isVisited(), bool, true if an augmenting path was found, false otherwise.
  */
 bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
-    for (auto v: vertexSet) {
+    for (auto v: getVertexSet()) {
         v->setVisited(false);
     }
 
@@ -32,16 +37,20 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
     while (!q.empty() && !t->isVisited()) {
         auto v = q.front();
         q.pop();
+
         for (auto e: v->getAdj()) {
-            auto w = e->getDest();
-            int residual = e->getCapacity() - e->getFlow();
-            if (!w->isVisited() && residual > 0) {
-                w->setVisited(true);
-                w->setPath(e);
-                q.push(w);
+            if(e->getAvailable()){
+                auto w = e->getDest();
+                int residual = e->getCapacity() - e->getFlow();
+                if (!w->isVisited() && residual > 0) {
+                    w->setVisited(true);
+                    w->setPath(e);
+                    q.push(w);
+                }
             }
         }
-        for (auto e: v->getIncoming()) {
+
+         for (auto e: v->getIncoming()) {
             auto w = e->getOrig();
             int residual = e->getFlow();
             if (!w->isVisited() && residual > 0) {
@@ -75,11 +84,12 @@ int Graph::maxFlowStations(int source, int sink) {
     int res = 0.0;
 
     // Reset the flows
-    for (auto v: vertexSet) {
+    for (auto v: getVertexSet()) {
         for (auto e: v->getAdj()) {
             e->setFlow(0);
         }
     }
+    int i=0;
 
     // Loop to find augmentation paths
     while (findAugmentingPath(s, t)) {
@@ -294,11 +304,11 @@ int maxSimTrainStation(Graph network, const string &name) {
     network.addVertex(super_source_ID);
 
     for (auto v: network.getVertexSet()) {
-        if (v->getAdj().size() == 1) {
+        if (v->getAdj().size() == 1 && network.getStation(name) != v->getId()) {
             network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCost());
             ids.push_back(v->getId());
-        } else if (v->getAdj().size() == 2) {
-            if (v->getAdj()[0]->getCost() != v->getAdj()[1]->getCost()) {
+        } else if (v->getAdj().size() == 2 && network.getStation(name) != v->getId()) {
+            if (v->getAdj()[0]->getDest()->getId() == v->getAdj()[1]->getDest()->getId()) {
                 network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[0]->getCost());
                 network.addEdge(super_source_ID, v->getId(), INF, v->getAdj()[1]->getCost());
                 ids.push_back(v->getId());
@@ -478,57 +488,133 @@ int maxTrain(Graph reduced_network, string const &orig, string const &dest) {
 
 //opcao 8
 
-void Graph::topkSegmentFailureAux(Graph g){
-    for (auto v : vertexSet) {
+/**
+ *
+ * @param g
+ */
+void topkSegmentFailureAux(Graph* g){
+    for (auto v : g->getVertexSet()) {
         if(v->getIndegree() == -1){
-            string stationName = g.getStationHash().at(v->getId()).getName();
-            v->setIndegree(maxSimTrainStation(g, stationName));
+            std::string stationName = g->getStation(v->getId()).getName();
+            v->setIndegree(maxSimTrainStation(*g, stationName));
         }
     }
 }
 
-void Graph::topkSegmentFailureDisable(Graph g){
-    for (auto v : vertexSet) {
-        string stationName = g.getStationHash().at(v->getId()).getName();
-        v->setIndegreeUnavailable((maxSimTrainStation(g, stationName)));
+/**
+ *
+ * @param g
+ */
+void topkSegmentFailureDisable(Graph* g){
+
+    for (auto v : g->getVertexSet()) {
+        std::string stationName = g->getStation(v->getId()).getName();
+        v->setIndegreeUnavailable((maxSimTrainStation(*g, stationName)));
+
     }
 }
 
-void Graph::disableEdge(Vertex *s, Vertex *t){
-    for (auto v : vertexSet) {
-        if(v==s){
-            for (auto e: v->getAdj()) {
-                if(e->getDest() == t){
-                    e->setAvailable(false);
-                }
-            }
-        }
-    }
+/**
+ *
+ */
+void Graph::disableEdge(){
+    std::string orig, dest;
 
+    std::cout << "--- Insert the stations which path you want to disable ---" << std::endl;
+    std::cout << "Insert name of origin station: " << endl;
+    std::cin.ignore(); // discard newline character left in input buffer
+    std::getline(std::cin, orig);
+    std::cout << "Insert name of destiny station: " << endl;
+    std::getline(std::cin, dest);
+
+    int origId = getInvertedHash()[orig];
+    int destId = getInvertedHash()[dest];
+
+    Vertex* src = findVertex(origId);
+    Vertex* sink = findVertex(destId);
+
+    for(auto e : src->getAdj()){
+        if(e->getDest() == sink)
+            e->setAvailable(false);
+    }
 }
 
+/**
+ *
+ * @param sortedVertex
+ */
+void Graph::showTopKImpactedVert(const vector<Vertex*>& sortedVertex){
+    double unavailable, available, i=0;
+    double percentage;
+    std::string stationName;
 
-bool sortDisabledEdges(Vertex* v1, Vertex* v2){
-    double affected1 = v1->getIndegreeUnavailable()/v1->getIndegree() * 100;
-    double affected2 = v2->getIndegreeUnavailable()/v2->getIndegree() * 100;
+    std::cout << "Top " << sortedVertex.size() << "  most affected stations." << std::endl;
 
-    if(affected1 == affected2){
-        return v1->getIndegreeUnavailable() > v2->getIndegreeUnavailable();
+    for(auto v : sortedVertex){
+        i++;
+        stationName = getStation(v->getId()).getName();
+        unavailable = v->getIndegreeUnavailable();
+        available = v->getIndegree();
+        percentage = (unavailable / available) * 100;
+
+
+        // 1 - [Estação] - xx% availability remaining - 7/25
+        std::cout << (int) i << " - [" << stationName << "] - " << std::fixed << std::setprecision(2) << percentage << "% availability remaining - ";
+        std::cout << (int) unavailable << "/" << (int) available << std::endl;
+    }
+}
+
+/**
+ *
+ * @param v1
+ * @param v2
+ * @return
+ */
+bool sortVertexByAffected(Vertex* v1, Vertex* v2){
+
+    double affected1 = (double) (v1->getIndegreeUnavailable()/v1->getIndegree()) * 100;
+    double affected2 = (double) (v2->getIndegreeUnavailable()/v2->getIndegree()) * 100;
+
+    if(abs(affected1 - affected2) < 1e-9){
+        return v1->getIndegreeUnavailable() < v2->getIndegreeUnavailable();
     }
     else{
-        return affected1 > affected2;
+        return affected1 < affected2;
     }
+
 }
 
-int topkSegmentFailure(Graph g){
-    g.topkSegmentFailureAux(g);
+/**
+ *
+ * @param g
+ * @param k
+ */
+void topkSegmentFailure(Graph* g, int k){
 
-//    disableEdge(src, sink);
-    g.topkSegmentFailureDisable(g);
+    for(auto v : g->getVertexSet()){
+        for(auto e : v->getAdj()){
+            e->setAvailable(true);
+        }
+        if(v->getIndegreeUnavailable() != 0){
+            cout << g->getStation(v->getId()).getName() << endl;
+        }
+    }
 
-    std::sort(g.getVertexSet().begin(), g.getVertexSet().end(), sortDisabledEdges);
+    topkSegmentFailureAux(g);
 
-//    show top k impacted vertexes
+
+    g->disableEdge();
+
+    topkSegmentFailureDisable(g);
+
+    vector<Vertex*> thisVector = g->getVertexSet();
+    std::sort(thisVector.begin(), thisVector.end(), sortVertexByAffected);
+
+    vector<Vertex*> topK(thisVector.begin(), thisVector.begin()+k);
+
+    g->showTopKImpactedVert(topK);
+
+
 }
 
 void displayMenu() {
@@ -549,12 +635,6 @@ void displayMenu() {
         cout << option << endl;
     }
     cout << "Insert option: ";
-}
-
-string getInput() {
-    string input_string;
-    std::getline(std::cin, input_string);
-    return input_string;
 }
 
 int main() {
@@ -646,41 +726,12 @@ int main() {
             cout << "do something with the output" << endl;
         } else if (opt == 8) {
             if (g.empty()) g = initGraph();
-            bool flag = true;
-            while(flag) {
-                cout << "Select the unavailable edge by inserting two stations: " << endl;
-                string orig, dest;
-                cout << "Insert origin station: ";
-                orig = getInput();
-                cout << "Insert destiny station: ";
-                dest = getInput();
-
-                cout << "origin " << orig << endl;
-                cout << "dest " << dest << endl;
-
-                int origId = g.getInvertedHash()[orig];
-
-                int destId = g.getInvertedHash()[dest];
-
-                cout << "origin: " << origId << endl;
-                cout << "destiny: " << destId << endl;
-
-                Vertex* s = g.findVertex(origId);
-                Vertex* t = g.findVertex(destId);
-
-                g.disableEdge(s,t);
-
-                cout << "If you want to turn another edge unavailable, insert the number 1: " << endl;
-                int number;
-                cin >> number;
-                if(number != 1){
-                    flag = false;
-                }
-
-            }
-
-
-        } else if (opt == 0) {
+            int k;
+            cout << "Insert how many affected stations will be shown" << endl;
+            cin >> k;
+            topkSegmentFailure(&g, k);
+            // ?
+        } else if (opt == 9) {
             break;
         }
     }

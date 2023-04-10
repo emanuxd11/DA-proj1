@@ -1,6 +1,7 @@
 // By: Gonçalo Leão
 
 #include "../includes/Graph.h"
+using namespace std;
 
 void Graph::setStationHash(std::unordered_map<int, Station> const &stations) {
     this->stationHash = stations;
@@ -13,10 +14,10 @@ void Graph::setInvertedHash(std::unordered_map<std::string, int> const &stations
 /* std::unordered_map<int, Station> Graph::getStationHash() {
     return this->stationHash;
 }
-
+*/
 std::unordered_map<std::string, int> Graph::getInvertedHash() {
     return inverseHash;
-} */
+}
 
 int Graph::getNumVertex() const {
     return vertexSet.size();
@@ -147,18 +148,9 @@ Station Graph::getStation(int id) {
     return it->second;
 }
 
-//void Graph::print(){
-//    for (auto v : this->vertexSet) {
-//        for(auto e : v->getAdj()){
-//            if (e->getFlow()!=0){
-//                std::cout << e->getOrig() << e->getDest()  << e->getFlow() << std::endl;
-//            }
-//        }
-//    }
-//}
-
 Graph::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());
     deleteMatrix(pathMatrix, vertexSet.size());
 }
+
 

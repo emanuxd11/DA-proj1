@@ -69,7 +69,7 @@ std::unordered_map<int, Station> Database::loadStations(
         std::unordered_set<std::string> &municipalities) {
 
     std::unordered_map<int, Station> stationHash;
-    std::ifstream stations("../docs/stations.csv");
+    std::ifstream stations("../docs/stationsWithoutAccents.csv");
 
     if (stations.is_open()) {
         int count = 0;
@@ -102,7 +102,7 @@ std::unordered_map<int, Station> Database::loadStations(
 }
 
 Graph Database::loadGraph() {
-    std::ifstream network("../docs/network.csv");
+    std::ifstream network("../docs/networkWithoutAccents.csv");
     if (!network.is_open()) {
         throw std::runtime_error("network.csv file not found in docs directory!");
     }
@@ -133,7 +133,7 @@ Graph Database::loadGraph() {
         g.addVertex(origId);
         g.addVertex(destId);
         // g.addBidirectionalEdge(origId, destId, (capacity / 2), cost); Porque é que isto estava a dividir por 2 lol? Assim dá tudo metade
-        g.addBidirectionalEdge(origId, destId, capacity, custo);
+        g.addBidirectionalEdge(origId, destId, (capacity/2), custo); // esta a dividir por 2 porque numa linha com 4 de fluxo, sao 2 comboios num sentido, e outros 2 noutro sentido
     }
 
     g.setStationHash(stationHash);

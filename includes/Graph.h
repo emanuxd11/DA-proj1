@@ -52,17 +52,13 @@ public:
     // usem antes os métodos getStation, que já verificam se a estação existe, se não, dá outputs errados
     // std::unordered_map<std::string, int> getInvertedHash();
 
-    int maxFlowStations(int source, int sink);
+    //int maxFlowStations(int source, int sink);
+
+    std::unordered_map<std::string, int> getInvertedHash();
 
     int dijkstra(Vertex* src, Vertex* dest);
 
     std::pair<int, int> maxTrainMinCost(int source, int target);
-
-    void topkSegmentFailureAux(Graph g);
-
-    void disableEdge(Vertex* s, Vertex* t);
-
-    void topkSegmentFailureDisable(Graph g);
 
     void setDistricts(std::unordered_set<std::string> districts);
 
@@ -72,14 +68,24 @@ public:
 
     std::unordered_set<std::string> getMunicipalities();
 
-
     int getStation(const std::string &name);
 
     Station getStation(int id);
 
+    void topKMunDistr(unsigned k);
+
+    void showTopKImpactedVert(const std::vector<Vertex *> &sortedVertex);
+
+    void disableEdge();
+
     //void print();
 
     bool empty();
+
+    std::string getInput();
+
+    int maxFlowStations(int source, int target);
+
 protected:
     std::vector<Vertex *> vertexSet;    // vertex set
 
@@ -95,11 +101,12 @@ protected:
      */
     int findVertexIdx(const int &id) const;
 
-    bool findAugmentingPath(Vertex *s, Vertex *t);
-
     std::unordered_set<std::string> districts;
 
     std::unordered_set<std::string> municipalities;
+
+    bool findAugmentingPath(Vertex *s, Vertex *t);
+
 };
 
 void deleteMatrix(int **m, int n);
