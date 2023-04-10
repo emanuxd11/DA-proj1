@@ -568,9 +568,6 @@ void topkSegmentFailure(Graph* g, int k){
         for(auto e : v->getAdj()){
             e->setAvailable(true);
         }
-        if(v->getIndegreeUnavailable() != 0){
-            cout << g->getStation(v->getId()).getName() << endl;
-        }
     }
 
     topkSegmentFailureAux(g);
