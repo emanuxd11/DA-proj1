@@ -448,8 +448,12 @@ pair<int, int> Graph::maxTrainMinCost(int source, int target) {
 }
 
 /**
- *
- * @param g
+ * This algorithm calculates the flow of each vertex that has not been calculated
+ * The result is stored as the vertex's indegree
+ * The indegree represents the flow of the vertex and is later used
+ * to determine which stations are most affected by the segment failure
+ * Time Complexity: O(V^2)
+ * @param Graph g, represents the graph
  */
 void topkSegmentFailureAux(Graph* g){
     for (auto v : g->getVertexSet()) {
@@ -461,8 +465,11 @@ void topkSegmentFailureAux(Graph* g){
 }
 
 /**
- *
- * @param g
+ * This algorithm calculates the flow of each vertex, when the edge is unavailable
+ * The IndegreeUnavailable represents the flow of the vertex with the edge unavailable and is later used
+ * to determine which stations are most affected by the segment failure
+ * Time Complexity: O(V^2)
+ * @param Graph g, represents the graph
  */
 void topkSegmentFailureDisable(Graph* g){
 
@@ -474,7 +481,9 @@ void topkSegmentFailureDisable(Graph* g){
 }
 
 /**
- *
+ * This algorithm makes unavailable the edge choosen by the user
+ * It has input two stations, and the edge to be unavailable is the edge between those two stations
+ * Time Complexity: O(E)
  */
 void Graph::disableEdge(){
     std::string orig, dest;
@@ -499,8 +508,11 @@ void Graph::disableEdge(){
 }
 
 /**
- *
- * @param sortedVertex
+ * This function shows the top-k most affected stations with their percentage of availability remaining and the number of available edges.
+ * It iterates through the sorted vector, calculating the percentage of unavailable edges for each vertex
+ * and displaying the information for the top-k vertices.
+ * Time Complexity: O(k)
+ * @param ector<Vertex*> sortedVertex, vector of sorted vertexes
  */
 void Graph::showTopKImpactedVert(const vector<Vertex*>& sortedVertex){
     double unavailable, available, i=0;
@@ -524,10 +536,10 @@ void Graph::showTopKImpactedVert(const vector<Vertex*>& sortedVertex){
 }
 
 /**
- *
- * @param v1
- * @param v2
- * @return
+ * This algorithm sorts the list of vertices in descending order of the percentage of affected stations
+ * @param Vertex v1
+ * @param Vertex v2
+ * @return a sorted vector of vertexes
  */
 bool sortVertexByAffected(Vertex* v1, Vertex* v2){
 
@@ -544,9 +556,11 @@ bool sortVertexByAffected(Vertex* v1, Vertex* v2){
 }
 
 /**
- *
- * @param g
- * @param k
+ * This algorithm starts with calculating the normal flow of each station. Then it makes the edge inserted by the user unavailable, and
+ * calculates the flow of each station again. It then compares the flows and shows the top k most affected stations
+ * Time Complexity: O((V+E)+(V^2)+E+(V^2)+(V*log(V))+k)
+ * @param Graph g, represents the graph
+ * @param int k, represents the number of most affected stations to show
  */
 void topkSegmentFailure(Graph* g, int k){
 
