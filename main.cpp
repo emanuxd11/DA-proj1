@@ -146,10 +146,15 @@ LarCapSolution largestCapPair(Graph network) {
 
     return res;
 }
-
+/**
+Calculates the transportation need for a specific district, considering all stations in the network.
+@param network The network of stations.
+@param district The district for which the transportation need should be calculated.
+@return The transportation need for the specified district.
+*/
 unsigned transportationNeed(Graph &network, string const &district) {
     int superSourceId = -1;
-    int superSinkId = network.getNumVertex();
+    int superSinkId = -2;
 
     vector<int> in;
     vector<int> out;
@@ -184,9 +189,58 @@ unsigned transportationNeed(Graph &network, string const &district) {
 
     return maxFlow;
 }
+/**
+Calculates the transportation need for a specific municipality, considering all stations in the network.
+@param network The network of stations.
+@param municipality The municipality for which the transportation need should be calculated.
+@return The transportation need for the specified municipality.
+*/
+unsigned transportationNeedMun(Graph &network, string const &municipality) {
+    int superSourceId = -1;
+    int superSinkId = -2;
 
+    vector<int> in;
+    vector<int> out;
+
+    network.addVertex(superSourceId);
+    network.addVertex(superSinkId);
+
+    for (auto v: network.getVertexSet()) {
+        if (v->getId() == superSourceId || v->getId() == superSinkId) continue;
+
+        if (network.getStation(v->getId()).getMunicipality() == municipality) {
+            network.addEdge(v->getId(), superSinkId, INF, 0);
+            out.push_back(v->getId());
+        } else if (v->getAdj().size() == 1) {
+            network.addEdge(superSourceId, v->getId(), INF, 0);
+            in.push_back(v->getId());
+        }
+    }
+
+    int maxFlow = network.maxFlowStations(superSourceId, superSinkId);
+
+    for (int id: in) {
+        network.findVertex(superSourceId)->removeEdge(id);
+    }
+
+    for (int id: out) {
+        network.findVertex(id)->removeEdge(superSinkId);
+    }
+
+    network.deleteVertex(superSourceId);
+    network.deleteVertex(superSinkId);
+
+    return maxFlow;
+}
 
 // opção 4
+
+/**
+@brief Prints the top K districts and municipalities with the highest transportation needs.
+@param network The graph representing the transportation network.
+@param k The number of top districts/municipalities to print.
+*/
+void topKMunDistr(Graph &network, unsigned k);
 void topKMunDistr(Graph &network, unsigned k) {
     vector<pair<string, int>> district_res;
     vector<pair<string, int>> municip_res;
@@ -194,7 +248,8 @@ void topKMunDistr(Graph &network, unsigned k) {
     unordered_set<string> districts = network.getDistricts();
     unordered_set<string> municipalities = network.getMunicipalities();
 
-    for (const string &district: districts) {
+    district_res.reserve(districts.size());
+for (const string &district: districts) {
         district_res.emplace_back(district, transportationNeed(network, district));
     }
 
@@ -204,6 +259,20 @@ void topKMunDistr(Graph &network, unsigned k) {
 
     cout << "The top " << k << " districts are:" << endl;
     for (auto it = district_res.begin(); it != district_res.begin() + k && it != district_res.end(); ++it) {
+        cout << it->first << " -> " << it->second << endl;
+    }
+
+    municip_res.reserve(municipalities.size());
+    for (const string &municipality: municipalities) {
+        municip_res.emplace_back(municipality, transportationNeedMun(network, municipality));
+    }
+
+    sort(municip_res.begin(), municip_res.end(), [](const pair<string, int> &a, const pair<string, int> &b) {
+        return a.second > b.second;
+    });
+
+    cout << "The top " << k << " municipalitis are:" << endl;
+    for (auto it = municip_res.begin(); it != municip_res.begin() + k && it != municip_res.end(); ++it) {
         cout << it->first << " -> " << it->second << endl;
     }
 }
