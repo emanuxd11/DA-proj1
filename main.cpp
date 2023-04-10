@@ -608,7 +608,7 @@ int main() {
         } else if (opt == 2) {
             if (g.empty()) g = initGraph();
 
-            
+
             string orig, dest;
             cout << "Insert name of origin station: ";
             orig = getInput();
