@@ -1,0 +1,7 @@
+PROJECT_NAME           = "Trabalho Prático I"
+OUTPUT_DIRECTORY       = docs
+GENERATE_HTML          = YES
+INPUT                  = src include main.cpp
+HTML_OUTPUT            = html
+EXTRACT_ALL            = YES
+FILE_PATTERNS          = *.cpp *.h

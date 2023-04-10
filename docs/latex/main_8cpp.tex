@@ -1,0 +1,224 @@
+\hypertarget{main_8cpp}{}\doxysection{src/main.cpp File Reference}
+\label{main_8cpp}\index{src/main.cpp@{src/main.cpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include \char`\"{}../includes/\+Graph.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../includes/\+Vertex\+Edge.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../includes/\+Database.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}../includes/\+Station.\+h\char`\"{}}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structLarCapSolution}{Lar\+Cap\+Solution}}
+\item 
+struct \mbox{\hyperlink{structCompareVertex}{Compare\+Vertex}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{main_8cpp_a5fdc7c2edd244e26bd1ccd70e156104a}{get\+Input}} ()
+\item 
+Graph \mbox{\hyperlink{main_8cpp_a807f5ace297f4f5a2624a4c6fec18ece}{init\+Graph}} ()
+\item 
+Graph \mbox{\hyperlink{main_8cpp_a2af4ba76b7e93dd429212e1c6cde7866}{init\+Reduced\+Graph}} (const vector$<$ pair$<$ string, string $>$ $>$ \&exclude)
+\item 
+\mbox{\hyperlink{structLarCapSolution}{Lar\+Cap\+Solution}} \mbox{\hyperlink{main_8cpp_a8597a457a3e2864c05e946b7e75e931d}{largest\+Cap\+Pair}} (Graph network)
+\item 
+unsigned \mbox{\hyperlink{main_8cpp_ac131ea73badd73cf63f4ccc028fa2a8b}{transportation\+Need}} (Graph \&network, const function$<$ bool(int id, const string \&name)$>$ \&compare, string const \&name)
+\item 
+void \mbox{\hyperlink{main_8cpp_aa4c9dca2082e2229e381fe69d3aca13d}{top\+KMun\+Distr}} (Graph \&network, unsigned k)
+\item 
+int \mbox{\hyperlink{main_8cpp_ac0e39babbb1699fef4e7a2217148fa4e}{max\+Sim\+Train\+Station}} (Graph network, const string \&name)
+\item 
+int \mbox{\hyperlink{main_8cpp_a58437c86bb001f27343d6e794fe78e72}{find\+Min\+Residual\+Along\+Path}} (Vertex $\ast$s, Vertex $\ast$t)
+\item 
+void \mbox{\hyperlink{main_8cpp_aa07ac6da29612cb1f4d6b8107fef3308}{augment\+Flow\+Along\+Path}} (Vertex $\ast$s, Vertex $\ast$t, int f)
+\item 
+void \mbox{\hyperlink{main_8cpp_ac4fe6ae067c9088718f224784fdbe09f}{topk\+Segment\+Failure\+Aux}} (Graph $\ast$g)
+\item 
+void \mbox{\hyperlink{main_8cpp_ada73a3ad77ce7f795adc7bac897b2a35}{topk\+Segment\+Failure\+Disable}} (Graph $\ast$g)
+\item 
+bool \mbox{\hyperlink{main_8cpp_a9bbfce7f33ac298c235447d68982b85f}{sort\+Vertex\+By\+Affected}} (Vertex $\ast$v1, Vertex $\ast$v2)
+\item 
+void \mbox{\hyperlink{main_8cpp_a4170d7bd6e15ced02f6c2a7807aa5ffa}{topk\+Segment\+Failure}} (Graph $\ast$g, int k)
+\item 
+void \mbox{\hyperlink{main_8cpp_a59c2926dd9b0968badf463aaf4f91422}{display\+Menu}} ()
+\item 
+int \mbox{\hyperlink{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8cpp_aa07ac6da29612cb1f4d6b8107fef3308}\label{main_8cpp_aa07ac6da29612cb1f4d6b8107fef3308}} 
+\index{main.cpp@{main.cpp}!augmentFlowAlongPath@{augmentFlowAlongPath}}
+\index{augmentFlowAlongPath@{augmentFlowAlongPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{augmentFlowAlongPath()}{augmentFlowAlongPath()}}
+{\footnotesize\ttfamily void augment\+Flow\+Along\+Path (\begin{DoxyParamCaption}\item[{Vertex $\ast$}]{s,  }\item[{Vertex $\ast$}]{t,  }\item[{int}]{f }\end{DoxyParamCaption})}
+
+This algorithm updates the flow along the augmentation path from the sink to the source. Time Complexity\+: O(\+V) 
+\begin{DoxyParams}{Parameters}
+{\em s} & Vertex, represents the source node \\
+\hline
+{\em t} & Vertex, represents the sink node \\
+\hline
+{\em f} & int, represents the flow to be augmented \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8cpp_a59c2926dd9b0968badf463aaf4f91422}\label{main_8cpp_a59c2926dd9b0968badf463aaf4f91422}} 
+\index{main.cpp@{main.cpp}!displayMenu@{displayMenu}}
+\index{displayMenu@{displayMenu}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{displayMenu()}{displayMenu()}}
+{\footnotesize\ttfamily void display\+Menu (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8cpp_a58437c86bb001f27343d6e794fe78e72}\label{main_8cpp_a58437c86bb001f27343d6e794fe78e72}} 
+\index{main.cpp@{main.cpp}!findMinResidualAlongPath@{findMinResidualAlongPath}}
+\index{findMinResidualAlongPath@{findMinResidualAlongPath}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{findMinResidualAlongPath()}{findMinResidualAlongPath()}}
+{\footnotesize\ttfamily int find\+Min\+Residual\+Along\+Path (\begin{DoxyParamCaption}\item[{Vertex $\ast$}]{s,  }\item[{Vertex $\ast$}]{t }\end{DoxyParamCaption})}
+
+This algorithm calculates the minimum residual capacity along a path from the source vertex to the target vertex in a given flow network. Time Complexity\+: O(\+V) 
+\begin{DoxyParams}{Parameters}
+{\em s} & Vertex, source node \\
+\hline
+{\em t} & Vertex, sink node \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+f int, represents the minimum residual capacity of the path from vertex source to vertex sink 
+\end{DoxyReturn}
+\mbox{\Hypertarget{main_8cpp_a5fdc7c2edd244e26bd1ccd70e156104a}\label{main_8cpp_a5fdc7c2edd244e26bd1ccd70e156104a}} 
+\index{main.cpp@{main.cpp}!getInput@{getInput}}
+\index{getInput@{getInput}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{getInput()}{getInput()}}
+{\footnotesize\ttfamily string get\+Input (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8cpp_a807f5ace297f4f5a2624a4c6fec18ece}\label{main_8cpp_a807f5ace297f4f5a2624a4c6fec18ece}} 
+\index{main.cpp@{main.cpp}!initGraph@{initGraph}}
+\index{initGraph@{initGraph}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{initGraph()}{initGraph()}}
+{\footnotesize\ttfamily Graph init\+Graph (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8cpp_a2af4ba76b7e93dd429212e1c6cde7866}\label{main_8cpp_a2af4ba76b7e93dd429212e1c6cde7866}} 
+\index{main.cpp@{main.cpp}!initReducedGraph@{initReducedGraph}}
+\index{initReducedGraph@{initReducedGraph}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{initReducedGraph()}{initReducedGraph()}}
+{\footnotesize\ttfamily Graph init\+Reduced\+Graph (\begin{DoxyParamCaption}\item[{const vector$<$ pair$<$ string, string $>$ $>$ \&}]{exclude }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8cpp_a8597a457a3e2864c05e946b7e75e931d}\label{main_8cpp_a8597a457a3e2864c05e946b7e75e931d}} 
+\index{main.cpp@{main.cpp}!largestCapPair@{largestCapPair}}
+\index{largestCapPair@{largestCapPair}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{largestCapPair()}{largestCapPair()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structLarCapSolution}{Lar\+Cap\+Solution}} largest\+Cap\+Pair (\begin{DoxyParamCaption}\item[{Graph}]{network }\end{DoxyParamCaption})}
+
+This algorithm finds the pair of stations with the highest max flow by brute forcing every possible pair of stations. Time complexity\+: O($\vert$\+V$\vert$$^\wedge$2 $\ast$ $\vert$\+E$\vert$ $\ast$ ($\vert$\+V$\vert$ + $\vert$\+E$\vert$)). 
+\begin{DoxyParams}{Parameters}
+{\em network} & Graph, railway network represented as a weighted, directed graph. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+res, \mbox{\hyperlink{structLarCapSolution}{Lar\+Cap\+Solution}}, a data structure containing a vector of pairs of stations. and an integer containing the max flow between this/these pair(s) of station(s). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{main_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{main.cpp@{main.cpp}!main@{main}}
+\index{main@{main}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{main_8cpp_ac0e39babbb1699fef4e7a2217148fa4e}\label{main_8cpp_ac0e39babbb1699fef4e7a2217148fa4e}} 
+\index{main.cpp@{main.cpp}!maxSimTrainStation@{maxSimTrainStation}}
+\index{maxSimTrainStation@{maxSimTrainStation}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{maxSimTrainStation()}{maxSimTrainStation()}}
+{\footnotesize\ttfamily int max\+Sim\+Train\+Station (\begin{DoxyParamCaption}\item[{Graph}]{network,  }\item[{const string \&}]{name }\end{DoxyParamCaption})}
+
+This algorithm finds the maximum number of trains that can simultaneously arrive at a given station. It works by creating a super source node that connects to all source stations (the ones with only one edge in their adjacency list) with an infinite capacity, and then calculating the max flow between the super source and the desired station. Time complexity\+: O($\vert$\+E$\vert$ $\ast$ ($\vert$\+V$\vert$ + $\vert$\+E$\vert$)) 
+\begin{DoxyParams}{Parameters}
+{\em network} & Graph, railway network represented as a weighted, directed graph. \\
+\hline
+{\em name} & std\+::string, string of characters containing the station name. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+max\+\_\+flow, int, maximum flow between the created super source and sink station (name) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{main_8cpp_a9bbfce7f33ac298c235447d68982b85f}\label{main_8cpp_a9bbfce7f33ac298c235447d68982b85f}} 
+\index{main.cpp@{main.cpp}!sortVertexByAffected@{sortVertexByAffected}}
+\index{sortVertexByAffected@{sortVertexByAffected}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{sortVertexByAffected()}{sortVertexByAffected()}}
+{\footnotesize\ttfamily bool sort\+Vertex\+By\+Affected (\begin{DoxyParamCaption}\item[{Vertex $\ast$}]{v1,  }\item[{Vertex $\ast$}]{v2 }\end{DoxyParamCaption})}
+
+This algorithm sorts the list of vertices in descending order of the percentage of affected stations 
+\begin{DoxyParams}{Parameters}
+{\em Vertex} & v1 \\
+\hline
+{\em Vertex} & v2 \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a sorted vector of vertexes 
+\end{DoxyReturn}
+\mbox{\Hypertarget{main_8cpp_aa4c9dca2082e2229e381fe69d3aca13d}\label{main_8cpp_aa4c9dca2082e2229e381fe69d3aca13d}} 
+\index{main.cpp@{main.cpp}!topKMunDistr@{topKMunDistr}}
+\index{topKMunDistr@{topKMunDistr}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{topKMunDistr()}{topKMunDistr()}}
+{\footnotesize\ttfamily void top\+KMun\+Distr (\begin{DoxyParamCaption}\item[{Graph \&}]{network,  }\item[{unsigned}]{k }\end{DoxyParamCaption})}
+
+Calculates the top k Municipalities and Districts sorted by their transportation needs. Time complexity\+: O($\vert$\+E$\vert$ $\ast$ ($\vert$\+V$\vert$ + $\vert$\+E$\vert$)) 
+\begin{DoxyParams}{Parameters}
+{\em network} & Graph, railway network represented as a weighted, directed graph. \\
+\hline
+{\em k} & int, number of districts/municipalities to show \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8cpp_a4170d7bd6e15ced02f6c2a7807aa5ffa}\label{main_8cpp_a4170d7bd6e15ced02f6c2a7807aa5ffa}} 
+\index{main.cpp@{main.cpp}!topkSegmentFailure@{topkSegmentFailure}}
+\index{topkSegmentFailure@{topkSegmentFailure}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{topkSegmentFailure()}{topkSegmentFailure()}}
+{\footnotesize\ttfamily void topk\+Segment\+Failure (\begin{DoxyParamCaption}\item[{Graph $\ast$}]{g,  }\item[{int}]{k }\end{DoxyParamCaption})}
+
+This algorithm starts with calculating the normal flow of each station. Then it makes the edge inserted by the user unavailable, and calculates the flow of each station again. It then compares the flows and shows the top k most affected stations Time Complexity\+: O((V+E)+(V$^\wedge$2)+E+(V$^\wedge$2)+(V$\ast$log(V))+k) 
+\begin{DoxyParams}{Parameters}
+{\em Graph} & g, represents the graph \\
+\hline
+{\em int} & k, represents the number of most affected stations to show \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8cpp_ac4fe6ae067c9088718f224784fdbe09f}\label{main_8cpp_ac4fe6ae067c9088718f224784fdbe09f}} 
+\index{main.cpp@{main.cpp}!topkSegmentFailureAux@{topkSegmentFailureAux}}
+\index{topkSegmentFailureAux@{topkSegmentFailureAux}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{topkSegmentFailureAux()}{topkSegmentFailureAux()}}
+{\footnotesize\ttfamily void topk\+Segment\+Failure\+Aux (\begin{DoxyParamCaption}\item[{Graph $\ast$}]{g }\end{DoxyParamCaption})}
+
+This algorithm calculates the flow of each vertex that has not been calculated The result is stored as the vertex\textquotesingle{}s indegree The indegree represents the flow of the vertex and is later used to determine which stations are most affected by the segment failure Time Complexity\+: O(\+V$^\wedge$2) 
+\begin{DoxyParams}{Parameters}
+{\em Graph} & g, represents the graph \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8cpp_ada73a3ad77ce7f795adc7bac897b2a35}\label{main_8cpp_ada73a3ad77ce7f795adc7bac897b2a35}} 
+\index{main.cpp@{main.cpp}!topkSegmentFailureDisable@{topkSegmentFailureDisable}}
+\index{topkSegmentFailureDisable@{topkSegmentFailureDisable}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{topkSegmentFailureDisable()}{topkSegmentFailureDisable()}}
+{\footnotesize\ttfamily void topk\+Segment\+Failure\+Disable (\begin{DoxyParamCaption}\item[{Graph $\ast$}]{g }\end{DoxyParamCaption})}
+
+This algorithm calculates the flow of each vertex, when the edge is unavailable The Indegree\+Unavailable represents the flow of the vertex with the edge unavailable and is later used to determine which stations are most affected by the segment failure Time Complexity\+: O(\+V$^\wedge$2) 
+\begin{DoxyParams}{Parameters}
+{\em Graph} & g, represents the graph \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{main_8cpp_ac131ea73badd73cf63f4ccc028fa2a8b}\label{main_8cpp_ac131ea73badd73cf63f4ccc028fa2a8b}} 
+\index{main.cpp@{main.cpp}!transportationNeed@{transportationNeed}}
+\index{transportationNeed@{transportationNeed}!main.cpp@{main.cpp}}
+\doxysubsubsection{\texorpdfstring{transportationNeed()}{transportationNeed()}}
+{\footnotesize\ttfamily unsigned transportation\+Need (\begin{DoxyParamCaption}\item[{Graph \&}]{network,  }\item[{const function$<$ bool(int id, const string \&name)$>$ \&}]{compare,  }\item[{string const \&}]{name }\end{DoxyParamCaption})}
+
+Calculates the transportation needs for a specific district or municipality. Time complexity\+: O($\vert$\+E$\vert$ $\ast$ ($\vert$\+V$\vert$ + $\vert$\+E$\vert$)) 
+\begin{DoxyParams}{Parameters}
+{\em network} & Graph, railway network represented as a weighted, directed graph. \\
+\hline
+{\em compare} & bool function, function that is used to check if the current searched vertex is in the district or municipality we want to avoid or use. \\
+\hline
+{\em name} & string, name of the district or municipality we\textquotesingle{}re currently calculating the transportation usage for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+unsigned, transportation need for a given district/municipality. 
+\end{DoxyReturn}
