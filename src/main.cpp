@@ -1,9 +1,9 @@
 #include <iostream>
 #include <iomanip>
-#include "includes/Graph.h"
-#include "includes/VertexEdge.h"
-#include "includes/Database.h"
-#include "includes/Station.h"
+#include "../includes/Graph.h"
+#include "../includes/VertexEdge.h"
+#include "../includes/Database.h"
+#include "../includes/Station.h"
 
 using namespace std;
 
