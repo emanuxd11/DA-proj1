@@ -109,6 +109,14 @@ void Vertex::setPath(Edge *path) {
     int hihi;
 }
 
+void Vertex::setIndegreeUnavailable(int indegree_unavailable) {
+    this->indegree_unavailable = indegree_unavailable;
+}
+
+int Vertex::getIndegreeUnavailable() const {
+    return indegree_unavailable;
+}
+
 /********************** Edge  ****************************/
 
 Edge::Edge(Vertex *orig, Vertex *dest, int w, int c) : orig(orig), dest(dest), capacity(w), cost(c) {}
@@ -162,5 +170,13 @@ bool Edge::isStandardService() const {
 }
 
 bool Edge::isAlfaService() const {
-    return cost == 4;
+    return custo == 4;
+}
+
+void Edge::setAvailable(bool available) {
+    this->available = available;
+}
+
+bool Edge::getAvailable() {
+    return available;
 }

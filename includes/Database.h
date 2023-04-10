@@ -25,6 +25,8 @@ public:
 private:
     // std::unordered_map<int, Station> districts;
 
+    static std::unordered_set<std::string> districts;
+    //
 };
 
 

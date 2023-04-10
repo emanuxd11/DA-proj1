@@ -18,7 +18,7 @@ class Edge;
 
 class Vertex {
 public:
-    Vertex(int id);
+    explicit Vertex(int id);
 
     bool operator<(Vertex &vertex) const; // // required by MutablePriorityQueue
 
@@ -56,6 +56,10 @@ public:
 
     friend class MutablePriorityQueue<Vertex>;
 
+    void setIndegreeUnavailable(int indegree_unavailable);
+
+    int getIndegreeUnavailable() const;
+
 protected:
     int id;                // identifier
 
@@ -64,7 +68,8 @@ protected:
     // auxiliary fields
     bool visited = false; // used by DFS, BFS, Prim ...
     bool processing = false; // used by isDAG (in addition to the visited attribute)
-    unsigned int indegree; // used by topsort
+    int indegree = -1; // used by topsort
+    int indegree_unavailable = 0;
     int dist = 0;
     Edge *path = nullptr;
 
@@ -104,10 +109,20 @@ public:
     bool isAlfaService() const;
 
     bool isStandardService() const;
+
+    void setAvailable(bool available);
+
+    bool getAvailable();
 protected:
     Vertex *dest; // destination vertex
+
+    int weight; // edge weight, can also be used for capacity
+    int custo;
+    bool available = true;
+
     int capacity; // edge capacity, can also be used for capacity
     int cost;
+
 
     // auxiliary fields
     bool selected = false;
