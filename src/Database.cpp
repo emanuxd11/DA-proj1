@@ -69,7 +69,7 @@ std::unordered_map<int, Station> Database::loadStations(
         std::unordered_set<std::string> &municipalities) {
 
     std::unordered_map<int, Station> stationHash;
-    std::ifstream stations("../docs/stationsWithoutAccents.csv");
+    std::ifstream stations("../docs/stations.csv");
 
     if (stations.is_open()) {
         int count = 0;
@@ -102,7 +102,7 @@ std::unordered_map<int, Station> Database::loadStations(
 }
 
 Graph Database::loadGraph() {
-    std::ifstream network("../docs/networkWithoutAccents.csv");
+    std::ifstream network("../docs/network.csv");
     if (!network.is_open()) {
         throw std::runtime_error("network.csv file not found in docs directory!");
     }
@@ -132,8 +132,59 @@ Graph Database::loadGraph() {
 
         g.addVertex(origId);
         g.addVertex(destId);
-        // g.addBidirectionalEdge(origId, destId, (capacity / 2), cost); Porque é que isto estava a dividir por 2 lol? Assim dá tudo metade
-        g.addBidirectionalEdge(origId, destId, (capacity/2), custo); // esta a dividir por 2 porque numa linha com 4 de fluxo, sao 2 comboios num sentido, e outros 2 noutro sentido
+        g.addBidirectionalEdge(origId, destId, capacity, custo);
+    }
+
+    g.setStationHash(stationHash);
+    g.setInvertedHash(inverseStations);
+
+    return g;
+}
+
+Graph Database::loadGraph(std::vector<std::pair<std::string, std::string>> exclude) {
+    std::ifstream network("../docs/network.csv");
+    if (!network.is_open()) {
+        throw std::runtime_error("network.csv file not found in docs directory!");
+    }
+
+    Graph g;
+    std::unordered_set<std::string> districts, municipalities;
+    auto stationHash = loadStations(districts, municipalities);
+    g.setDistricts(districts);
+    g.setMunicipalities(municipalities);
+    auto inverseStations = stationsByName(stationHash);
+
+    std::string line, origStation, destStation;
+    int origId, destId, custo, capacity;
+
+    getline(network, line); // throwaway first line read
+    while (getline(network, line)) {
+        std::stringstream ss(line);
+        std::vector<std::string> fields = lineParser(line);
+
+        origStation = fields[0];
+        destStation = fields[1];
+        capacity = calculateLineCapacity(fields[2]);
+        custo = calculateTrainCost(fields[3]);
+
+        origId = inverseStations[origStation];
+        destId = inverseStations[destStation];
+
+        g.addVertex(origId);
+        g.addVertex(destId);
+
+        bool skip = false;
+        for (auto pair : exclude) {
+            if ( (pair.first == origStation and pair.second == destStation)
+                 or (pair.first == destStation and pair.second == origStation) ) {
+                skip = true;
+                break;
+            }
+        }
+
+        if (!skip) {
+            g.addBidirectionalEdge(origId, destId, capacity, custo);
+        }
     }
 
     g.setStationHash(stationHash);

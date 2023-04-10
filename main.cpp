@@ -18,6 +18,10 @@ Graph initGraph() {
     return Database::loadGraph();
 }
 
+Graph initReducedGraph(const vector<pair<string, string>> &exclude) {
+    return Database::loadGraph(exclude);
+}
+
 // opção 2
 /**
  * This algorithm finds augmenting paths between source and sink vertices.
@@ -156,15 +160,20 @@ LarCapSolution largestCapPair(Graph network) {
 
     return res;
 }
+
 /**
-Calculates the transportation need for a specific district, considering all stations in the network.
-@param network The network of stations.
-@param district The district for which the transportation need should be calculated.
-@return The transportation need for the specified district.
-*/
-unsigned transportationNeed(Graph &network, string const &district) {
-    int superSourceId = -1;
-    int superSinkId = -2;
+ * Calculates the transportation needs for a specific district or municipality.
+ * Time complexity: O(|E| * (|V| + |E|))
+ * @param network Graph, railway network represented as a weighted, directed graph.
+ * @param compare bool function, function that is used to check if the current searched
+ * vertex is in the district or municipality we want to avoid or use.
+ * @param name string, name of the district or municipality we're currently calculating the
+ * transportation usage for.
+ * @return unsigned, transportation need for a given district/municipality.
+ */
+unsigned transportationNeed(Graph &network, const function<bool(int id, const string &name)> &compare, string const &name) {
+    const int superSourceId = -1;
+    const int superSinkId = -2;
 
     vector<int> in;
     vector<int> out;
@@ -175,50 +184,7 @@ unsigned transportationNeed(Graph &network, string const &district) {
     for (auto v: network.getVertexSet()) {
         if (v->getId() == superSourceId || v->getId() == superSinkId) continue;
 
-        if (network.getStation(v->getId()).getDistrict() == district) {
-            network.addEdge(v->getId(), superSinkId, INF, 0);
-            out.push_back(v->getId());
-        } else if (v->getAdj().size() == 1) {
-            network.addEdge(superSourceId, v->getId(), INF, 0);
-            in.push_back(v->getId());
-        }
-    }
-
-    int maxFlow = network.maxFlowStations(superSourceId, superSinkId);
-
-    for (int id: in) {
-        network.findVertex(superSourceId)->removeEdge(id);
-    }
-
-    for (int id: out) {
-        network.findVertex(id)->removeEdge(superSinkId);
-    }
-
-    network.deleteVertex(superSourceId);
-    network.deleteVertex(superSinkId);
-
-    return maxFlow;
-}
-/**
-Calculates the transportation need for a specific municipality, considering all stations in the network.
-@param network The network of stations.
-@param municipality The municipality for which the transportation need should be calculated.
-@return The transportation need for the specified municipality.
-*/
-unsigned transportationNeedMun(Graph &network, string const &municipality) {
-    int superSourceId = -1;
-    int superSinkId = -2;
-
-    vector<int> in;
-    vector<int> out;
-
-    network.addVertex(superSourceId);
-    network.addVertex(superSinkId);
-
-    for (auto v: network.getVertexSet()) {
-        if (v->getId() == superSourceId || v->getId() == superSinkId) continue;
-
-        if (network.getStation(v->getId()).getMunicipality() == municipality) {
+        if (compare(v->getId(), name)) {
             network.addEdge(v->getId(), superSinkId, INF, 0);
             out.push_back(v->getId());
         } else if (v->getAdj().size() == 1) {
@@ -243,27 +209,44 @@ unsigned transportationNeedMun(Graph &network, string const &municipality) {
     return maxFlow;
 }
 
-// opção 4
-
 /**
-@brief Prints the top K districts and municipalities with the highest transportation needs.
-@param network The graph representing the transportation network.
-@param k The number of top districts/municipalities to print.
-*/
-void topKMunDistr(Graph &network, unsigned k);
+ * Calculates the top k Municipalities and Districts sorted by their transportation needs.
+ * Time complexity: O(|E| * (|V| + |E|))
+ * @param network Graph, railway network represented as a weighted, directed graph.
+ * @param k int, number of districts/municipalities to show
+ */
 void topKMunDistr(Graph &network, unsigned k) {
     vector<pair<string, int>> district_res;
     vector<pair<string, int>> municip_res;
 
+    auto compareDistrict = [&network](int id, const string &district) {
+        return network.getStation(id).getDistrict() == district;
+    };
+
+    auto compareMunicipality = [&network](int id, const string &municipality) {
+        return network.getStation(id).getMunicipality() == municipality;
+    };
+
     unordered_set<string> districts = network.getDistricts();
     unordered_set<string> municipalities = network.getMunicipalities();
 
-    district_res.reserve(districts.size());
-for (const string &district: districts) {
-        district_res.emplace_back(district, transportationNeed(network, district));
+    // get solution for districts
+    for (const string &district: districts) {
+        district_res.emplace_back(district, transportationNeed(network, compareDistrict, district));
     }
 
+    // get solution for municipalities
+    for (const string &municipality: municipalities) {
+        municip_res.emplace_back(municipality, transportationNeed(network, compareMunicipality, municipality));
+    }
+
+    // sort districts
     sort(district_res.begin(), district_res.end(), [](const pair<string, int> &a, const pair<string, int> &b) {
+        return a.second > b.second;
+    });
+
+    // sort municipalities
+    sort(municip_res.begin(), municip_res.end(), [](const pair<string, int> &a, const pair<string, int> &b) {
         return a.second > b.second;
     });
 
@@ -272,23 +255,12 @@ for (const string &district: districts) {
         cout << it->first << " -> " << it->second << endl;
     }
 
-    municip_res.reserve(municipalities.size());
-    for (const string &municipality: municipalities) {
-        municip_res.emplace_back(municipality, transportationNeedMun(network, municipality));
-    }
-
-    sort(municip_res.begin(), municip_res.end(), [](const pair<string, int> &a, const pair<string, int> &b) {
-        return a.second > b.second;
-    });
-
-    cout << "The top " << k << " municipalitis are:" << endl;
+    cout << "The top " << k << " municipalities are:" << endl;
     for (auto it = municip_res.begin(); it != municip_res.begin() + k && it != municip_res.end(); ++it) {
         cout << it->first << " -> " << it->second << endl;
     }
 }
 
-
-// opção 5
 /**
  * This algorithm finds the maximum number of trains that can simultaneously arrive
  * at a given station. It works by creating a super source node that connects to all source
@@ -333,9 +305,6 @@ struct CompareVertex {
     }
 };
 
-// The main function that finds shortest distances from src
-// to all other vertices using Bellman-Ford algorithm.  The
-// function also detects negative capacity cycle
 /**
  * This algorithm finds the shortest path from a vertex which is the source node to all other vertices in a weighted graph
  * with non-negative edge weights.
@@ -345,7 +314,6 @@ struct CompareVertex {
  * @return dist[dest], represents the distance of the source vertex src to the destination vertex dest
  */
 int Graph::dijkstra(Vertex *src, Vertex *dest) {
-
     // Step 1: Initialize distances from src to all other
     // vertices as UINT8_MAX INITE
     for (auto v: vertexSet) {
@@ -423,7 +391,6 @@ void augmentFlowAlongPath(Vertex *s, Vertex *t, int f) {
     }
 }
 
-// opção 6
 /**
  * This algorithm calculates the maximum amount of trains that can simultaneously travel between two specific stations
  * with minimum cost for the company.
@@ -479,14 +446,6 @@ pair<int, int> Graph::maxTrainMinCost(int source, int target) {
 
     return cost_flow;
 }
-
-
-// opção 7
-int maxTrain(Graph reduced_network, string const &orig, string const &dest) {
-    return 0;
-}
-
-//opcao 8
 
 /**
  *
@@ -602,7 +561,6 @@ void topkSegmentFailure(Graph* g, int k){
 
     topkSegmentFailureAux(g);
 
-
     g->disableEdge();
 
     topkSegmentFailureDisable(g);
@@ -613,8 +571,6 @@ void topkSegmentFailure(Graph* g, int k){
     vector<Vertex*> topK(thisVector.begin(), thisVector.begin()+k);
 
     g->showTopKImpactedVert(topK);
-
-
 }
 
 void displayMenu() {
@@ -648,9 +604,11 @@ int main() {
 
         if (opt == 1) {
             g = initGraph();
+
         } else if (opt == 2) {
             if (g.empty()) g = initGraph();
 
+            
             string orig, dest;
             cout << "Insert name of origin station: ";
             orig = getInput();
@@ -662,6 +620,7 @@ int main() {
 
             cout << g.maxFlowStations(origId, destId) << " trains can simultaneously travel between "
                  << orig << " and " << dest << endl;
+
         } else if (opt == 3) {
             if (g.empty()) g = initGraph();
 
@@ -679,6 +638,7 @@ int main() {
             cout << "Insert k: ";
             cin >> k;
             topKMunDistr(g, k);
+
         } else if (opt == 5) {
             if (g.empty()) g = initGraph();
             string station_name;
@@ -691,6 +651,7 @@ int main() {
 
             int num = maxSimTrainStation(g, station_name);
             cout << num << " trains can arrive at " << station_name << " simultaneously" << endl;
+
         } else if (opt == 6) {
             if (g.empty()) g = initGraph();
             string orig, dest;
@@ -699,38 +660,52 @@ int main() {
             cout << "Insert destiny station: ";
             dest = getInput();
 
-            // cout << "origin " << orig << endl;
-            // cout << "dest " << dest << endl;
-
             int origId = g.getStation(orig);
             int destId = g.getStation(dest);
-
-            // cout << "origin: " << origId << endl;
-            // cout << "destiny: " << destId << endl;
-            // cout << "aaaaa: " << g.getStationHash().find(destId)->second.getName() <<endl;
 
             pair<int, int> cost_flow = g.maxTrainMinCost(origId, destId);
             cout << "Numero de comboios em simultaneo (maxFlow): " << cost_flow.second << endl;
             cout << "Custo Minimo: " << cost_flow.first << endl;
         } else if (opt == 7) {
             if (g.empty()) g = initGraph();
-            // obter estações para remover
-            // removê-las do grafo
+
+            vector<pair<string, string>> exclude;
             string orig, dest;
+            cout << "Inserting segment(s) to be removed: " << endl;
+            while (true) {
+                cout << "Insert origin station (or q to quit): ";
+                orig = getInput();
+                if (orig == "q") break;
+                cout << "Insert destiny station: ";
+                dest = getInput();
+
+                if (!g.getStation(orig) or !g.getStation(dest)) {
+                    // check if stations exist
+                } else {
+                    exclude.emplace_back( orig, dest );
+                }
+            }
+
+            auto reduced_graph = initReducedGraph(exclude);
+            cout << "Stations for max flow: " << endl;
             cout << "Insert origin station: ";
-            // aqui é melhor usar getInput (definida em cima) pq o cin só lê até aos espaços
             orig = getInput();
             cout << "Insert destiny station: ";
             dest = getInput();
-            //int num = maxTrainMinCost(g, orig, dest);
-            cout << "do something with the output" << endl;
+            int origId = reduced_graph.getStation(orig);
+            int destId = reduced_graph.getStation(dest);
+
+            cout << "Max flow between " << orig << " and " << dest <<
+                 " with reduced connectivity is " <<
+                 reduced_graph.maxFlowStations(origId, destId) << endl;
+
         } else if (opt == 8) {
             if (g.empty()) g = initGraph();
             int k;
             cout << "Insert how many affected stations will be shown" << endl;
             cin >> k;
             topkSegmentFailure(&g, k);
-            // ?
+
         } else if (opt == 9) {
             break;
         }

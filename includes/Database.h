@@ -19,6 +19,8 @@ public:
 
     static Graph loadGraph();
 
+    static Graph loadGraph(std::vector<std::pair<std::string, std::string>> exclude);
+
     static std::unordered_map<int, Station> loadStations(std::unordered_set<std::string> &districts, std::unordered_set<std::string> &municipalities);
 
     static std::unordered_map<std::string, int> stationsByName(std::unordered_map<int, Station> stationHash);
