@@ -48,11 +48,11 @@ public:
 
     void setInvertedHash(std::unordered_map<std::string, int> const &stationsInverse);
 
-    std::unordered_map<int, Station> getStationHash();
+    // std::unordered_map<int, Station> getStationHash();
+    // usem antes os métodos getStation, que já verificam se a estação existe, se não, dá outputs errados
+    // std::unordered_map<std::string, int> getInvertedHash();
 
-    std::unordered_map<std::string, int> getInvertedHash();
-
-    int maxFlowStations(int source, int target);
+    int maxFlowStations(int source, int sink);
 
     int dijkstra(Vertex* src, Vertex* dest);
 
@@ -72,6 +72,10 @@ public:
 
     std::unordered_set<std::string> getMunicipalities();
 
+
+    int getStation(const std::string &name);
+
+    Station getStation(int id);
 
     //void print();
 
