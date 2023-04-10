@@ -13,7 +13,6 @@ string getInput() {
     return input_string;
 }
 
-// opção 1
 Graph initGraph() {
     return Database::loadGraph();
 }
@@ -22,7 +21,6 @@ Graph initReducedGraph(const vector<pair<string, string>> &exclude) {
     return Database::loadGraph(exclude);
 }
 
-// opção 2
 /**
  * This algorithm finds augmenting paths between source and sink vertices.
  * Time complexity: O(|V| + |E|).
@@ -43,7 +41,7 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
         q.pop();
 
         for (auto e: v->getAdj()) {
-            if(e->getAvailable()){
+            if (e->getAvailable()) {
                 auto w = e->getDest();
                 int residual = e->getCapacity() - e->getFlow();
                 if (!w->isVisited() && residual > 0) {
@@ -54,7 +52,7 @@ bool Graph::findAugmentingPath(Vertex *s, Vertex *t) {
             }
         }
 
-         for (auto e: v->getIncoming()) {
+        for (auto e: v->getIncoming()) {
             auto w = e->getOrig();
             int residual = e->getFlow();
             if (!w->isVisited() && residual > 0) {
@@ -93,7 +91,6 @@ int Graph::maxFlowStations(int source, int sink) {
             e->setFlow(0);
         }
     }
-    int i=0;
 
     // Loop to find augmentation paths
     while (findAugmentingPath(s, t)) {
@@ -125,7 +122,9 @@ int Graph::maxFlowStations(int source, int sink) {
     return res;
 }
 
-// opção 3
+/**
+ * This data structure simplifies returning values in largestCapPair.
+ */
 struct LarCapSolution {
     vector<pair<Station, Station>> station_pairs;
     int maxFlow = -1;
@@ -171,7 +170,8 @@ LarCapSolution largestCapPair(Graph network) {
  * transportation usage for.
  * @return unsigned, transportation need for a given district/municipality.
  */
-unsigned transportationNeed(Graph &network, const function<bool(int id, const string &name)> &compare, string const &name) {
+unsigned
+transportationNeed(Graph &network, const function<bool(int id, const string &name)> &compare, string const &name) {
     const int superSourceId = -1;
     const int superSinkId = -2;
 
@@ -266,6 +266,7 @@ void topKMunDistr(Graph &network, unsigned k) {
  * at a given station. It works by creating a super source node that connects to all source
  * stations (the ones with only one edge in their adjacency list) with an infinite capacity,
  * and then calculating the max flow between the super source and the desired station.
+ * Time complexity: O(|E| * (|V| + |E|))
  * @param network Graph, railway network represented as a weighted, directed graph.
  * @param name std::string, string of characters containing the station name.
  * @return max_flow, int, maximum flow between the created super source and sink station (name)
@@ -357,7 +358,6 @@ int findMinResidualAlongPath(Vertex *s, Vertex *t) {
     int f = UINT8_MAX;
     for (auto v = t; v != s;) {
         auto e = v->getPath();
-        //cout << v->getId() << " " <<  g->getStationHash()[v->getId()].getName() << " " << e->getCapacity() << " " << e->getCost() << endl;
         if (e->getDest() == v) {
             f = std::min(f, e->getCapacity() - e->getFlow());
             v = e->getOrig();
@@ -384,7 +384,6 @@ void augmentFlowAlongPath(Vertex *s, Vertex *t, int f) {
             e->setFlow(flow + f);
             v = e->getOrig();
         } else {
-            //printf("oldssadsadsadsa");
             e->setFlow(flow - f);
             v = e->getDest();
         }
@@ -413,19 +412,13 @@ pair<int, int> Graph::maxTrainMinCost(int source, int target) {
             e->setFlow(0);
         }
     }
-    // Loop to find augmentation paths
-    //std::cout << "inicio" << std::endl;
-    while (dijkstra(s, t) != UINT8_MAX) {
-        //std::cout << "olaaa" << std::endl;
 
+    // Loop to find augmentation paths
+    while (dijkstra(s, t) != UINT8_MAX) {
         int f = findMinResidualAlongPath(s, t);
-        //std::cout << "flow" <<  f << std::endl;
-        //print();
         augmentFlowAlongPath(s, t, f);
     }
 
-
-    //int cost = calcularCusto();
     int cost = 0, maxFlow = 0;
 
     for (auto v: vertexSet) {
@@ -438,7 +431,6 @@ pair<int, int> Graph::maxTrainMinCost(int source, int target) {
             }
         }
     }
-
 
     pair<int, int> cost_flow;
     cost_flow.first = cost;
@@ -455,9 +447,9 @@ pair<int, int> Graph::maxTrainMinCost(int source, int target) {
  * Time Complexity: O(V^2)
  * @param Graph g, represents the graph
  */
-void topkSegmentFailureAux(Graph* g){
-    for (auto v : g->getVertexSet()) {
-        if(v->getIndegree() == -1){
+void topkSegmentFailureAux(Graph *g) {
+    for (auto v: g->getVertexSet()) {
+        if (v->getIndegree() == -1) {
             std::string stationName = g->getStation(v->getId()).getName();
             v->setIndegree(maxSimTrainStation(*g, stationName));
         }
@@ -471,9 +463,9 @@ void topkSegmentFailureAux(Graph* g){
  * Time Complexity: O(V^2)
  * @param Graph g, represents the graph
  */
-void topkSegmentFailureDisable(Graph* g){
+void topkSegmentFailureDisable(Graph *g) {
 
-    for (auto v : g->getVertexSet()) {
+    for (auto v: g->getVertexSet()) {
         std::string stationName = g->getStation(v->getId()).getName();
         v->setIndegreeUnavailable((maxSimTrainStation(*g, stationName)));
 
@@ -485,7 +477,7 @@ void topkSegmentFailureDisable(Graph* g){
  * It has input two stations, and the edge to be unavailable is the edge between those two stations
  * Time Complexity: O(E)
  */
-void Graph::disableEdge(){
+void Graph::disableEdge() {
     std::string orig, dest;
 
     std::cout << "--- Insert the stations which path you want to disable ---" << std::endl;
@@ -498,11 +490,11 @@ void Graph::disableEdge(){
     int origId = getInvertedHash()[orig];
     int destId = getInvertedHash()[dest];
 
-    Vertex* src = findVertex(origId);
-    Vertex* sink = findVertex(destId);
+    Vertex *src = findVertex(origId);
+    Vertex *sink = findVertex(destId);
 
-    for(auto e : src->getAdj()){
-        if(e->getDest() == sink)
+    for (auto e: src->getAdj()) {
+        if (e->getDest() == sink)
             e->setAvailable(false);
     }
 }
@@ -514,23 +506,23 @@ void Graph::disableEdge(){
  * Time Complexity: O(k)
  * @param ector<Vertex*> sortedVertex, vector of sorted vertexes
  */
-void Graph::showTopKImpactedVert(const vector<Vertex*>& sortedVertex){
-    double unavailable, available, i=0;
+void Graph::showTopKImpactedVert(const vector<Vertex *> &sortedVertex) {
+    double unavailable, available, i = 0;
     double percentage;
     std::string stationName;
 
     std::cout << "Top " << sortedVertex.size() << "  most affected stations." << std::endl;
 
-    for(auto v : sortedVertex){
+    for (auto v: sortedVertex) {
         i++;
         stationName = getStation(v->getId()).getName();
         unavailable = v->getIndegreeUnavailable();
         available = v->getIndegree();
         percentage = (unavailable / available) * 100;
 
-
         // 1 - [Estação] - xx% availability remaining - 7/25
-        std::cout << (int) i << " - [" << stationName << "] - " << std::fixed << std::setprecision(2) << percentage << "% availability remaining - ";
+        std::cout << (int) i << " - [" << stationName << "] - " << std::fixed << std::setprecision(2) << percentage
+                  << "% availability remaining - ";
         std::cout << (int) unavailable << "/" << (int) available << std::endl;
     }
 }
@@ -541,15 +533,14 @@ void Graph::showTopKImpactedVert(const vector<Vertex*>& sortedVertex){
  * @param Vertex v2
  * @return a sorted vector of vertexes
  */
-bool sortVertexByAffected(Vertex* v1, Vertex* v2){
+bool sortVertexByAffected(Vertex *v1, Vertex *v2) {
 
-    double affected1 = (double) (v1->getIndegreeUnavailable()/v1->getIndegree()) * 100;
-    double affected2 = (double) (v2->getIndegreeUnavailable()/v2->getIndegree()) * 100;
+    double affected1 = (double) (v1->getIndegreeUnavailable() / v1->getIndegree()) * 100;
+    double affected2 = (double) (v2->getIndegreeUnavailable() / v2->getIndegree()) * 100;
 
-    if(abs(affected1 - affected2) < 1e-9){
+    if (abs(affected1 - affected2) < 1e-9) {
         return v1->getIndegreeUnavailable() < v2->getIndegreeUnavailable();
-    }
-    else{
+    } else {
         return affected1 < affected2;
     }
 
@@ -562,10 +553,10 @@ bool sortVertexByAffected(Vertex* v1, Vertex* v2){
  * @param Graph g, represents the graph
  * @param int k, represents the number of most affected stations to show
  */
-void topkSegmentFailure(Graph* g, int k){
+void topkSegmentFailure(Graph *g, int k) {
 
-    for(auto v : g->getVertexSet()){
-        for(auto e : v->getAdj()){
+    for (auto v: g->getVertexSet()) {
+        for (auto e: v->getAdj()) {
             e->setAvailable(true);
         }
     }
@@ -576,10 +567,10 @@ void topkSegmentFailure(Graph* g, int k){
 
     topkSegmentFailureDisable(g);
 
-    vector<Vertex*> thisVector = g->getVertexSet();
+    vector<Vertex *> thisVector = g->getVertexSet();
     std::sort(thisVector.begin(), thisVector.end(), sortVertexByAffected);
 
-    vector<Vertex*> topK(thisVector.begin(), thisVector.begin()+k);
+    vector<Vertex *> topK(thisVector.begin(), thisVector.begin() + k);
 
     g->showTopKImpactedVert(topK);
 }
@@ -693,7 +684,7 @@ int main() {
                 if (!g.getStation(orig) or !g.getStation(dest)) {
                     // check if stations exist
                 } else {
-                    exclude.emplace_back( orig, dest );
+                    exclude.emplace_back(orig, dest);
                 }
             }
 
